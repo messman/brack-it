@@ -5,9 +5,12 @@ module.exports = {
 		index: "./src/entries/index.tsx",
 	},
 	output: {
-		filename: "bundle.js",
+		filename: "webpack.entry.[name].js",
 		path: path.resolve(__dirname, "dist")
 	},
+
+	// Enable sourcemaps for debugging webpack's output. Increases build time - faster options are available.
+	devtool: "source-map",
 
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions (so that you don't need to type out the extension yourself).
