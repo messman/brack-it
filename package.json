@@ -1,0 +1,24 @@
+{
+	"name": "brack-it",
+	"version": "1.0.0",
+	"description": "A front-end web project for creating tournament brackets.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/messman/brack-it.git"
+	},
+	"keywords": [
+		"game",
+		"bracket",
+		"tournament"
+	],
+	"author": "Andrew Messier",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/messman/brack-it/issues"
+	},
+	"homepage": "https://github.com/messman/brack-it#readme"
+}
