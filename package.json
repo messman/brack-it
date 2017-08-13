@@ -1,24 +1,34 @@
 {
-	"name": "brack-it",
-	"version": "1.0.0",
-	"description": "A front-end web project for creating tournament brackets.",
-	"main": "index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/messman/brack-it.git"
-	},
-	"keywords": [
-		"game",
-		"bracket",
-		"tournament"
-	],
-	"author": "Andrew Messier",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/messman/brack-it/issues"
-	},
-	"homepage": "https://github.com/messman/brack-it#readme"
+  "name": "brack-it",
+  "version": "1.0.0",
+  "description": "A front-end web project for creating tournament brackets.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/messman/brack-it.git"
+  },
+  "keywords": [
+    "game",
+    "bracket",
+    "tournament"
+  ],
+  "author": "Andrew Messier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/messman/brack-it/issues"
+  },
+  "homepage": "https://github.com/messman/brack-it#readme",
+  "dependencies": {
+    "@types/react": "^16.0.2",
+    "@types/react-dom": "^15.5.2",
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.4"
+  }
 }
