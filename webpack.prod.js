@@ -1,7 +1,10 @@
 console.log("~~~~~ PRODUCTION build ~~~~~");
 
 const merge = require("webpack-merge");
-const baseConfig = require("./webpack.base.js");
+const base = require("./webpack.base.js");
+
+// Creates the HTML file for you
+const HTMLWebpackPlugin = require("html-webpack-plugin");
 
 // Add the ExtractTextPlugin to move CSS out into their own files
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -9,7 +12,12 @@ const extractSass = new ExtractTextPlugin({
 	filename: "index.css",
 });
 
-module.exports = merge(baseConfig, {
+const totalHTMLPluginOptions = merge(base.html,
+	{
+		title: "Brack-It"
+	});
+
+module.exports = merge(base.base, {
 
 	// Enable sourcemaps for debugging webpack's output. Increases build time - faster options are available.
 	devtool: "source-map",
@@ -31,6 +39,7 @@ module.exports = merge(baseConfig, {
 	},
 
 	plugins: [
-		extractSass
+		extractSass,
+		new HTMLWebpackPlugin(totalHTMLPluginOptions)
 	]
 });

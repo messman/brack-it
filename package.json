@@ -1,47 +1,48 @@
 {
-	"name": "brack-it",
-	"version": "1.0.0",
-	"description": "A front-end web project for creating tournament brackets.",
-	"main": "index.js",
-	"scripts": {
-		"dev": "webpack --config webpack.dev.js",
-		"dev:w": "webpack --config webpack.dev.js --watch",
-		"production": "webpack --config webpack.prod.js",
-		"production:w": "webpack --config webpack.prod.js --watch"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/messman/brack-it.git"
-	},
-	"keywords": [
-		"game",
-		"bracket",
-		"tournament"
-	],
-	"author": "Andrew Messier",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/messman/brack-it/issues"
-	},
-	"homepage": "https://github.com/messman/brack-it#readme",
-	"dependencies": {
-		"@types/react": "^16.0.2",
-		"@types/react-dom": "^15.5.2",
-		"babel-core": "^6.25.0",
-		"babel-loader": "^7.1.1",
-		"babel-preset-es2015": "^6.24.1",
-		"babel-preset-react": "^6.24.1",
-		"clean-webpack-plugin": "^0.1.16",
-		"css-loader": "^0.28.4",
-		"extract-text-webpack-plugin": "^3.0.0",
-		"node-sass": "^4.5.3",
-		"react": "^15.6.1",
-		"react-dom": "^15.6.1",
-		"sass-loader": "^6.0.6",
-		"style-loader": "^0.18.2",
-		"ts-loader": "^2.3.2",
-		"typescript": "^2.4.2",
-		"webpack": "^3.5.4",
-		"webpack-merge": "^4.1.0"
-	}
+  "name": "brack-it",
+  "version": "1.0.0",
+  "description": "A front-end web project for creating tournament brackets.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --config webpack.dev.js",
+    "dev:w": "webpack --config webpack.dev.js --watch",
+    "production": "webpack --config webpack.prod.js",
+    "production:w": "webpack --config webpack.prod.js --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/messman/brack-it.git"
+  },
+  "keywords": [
+    "game",
+    "bracket",
+    "tournament"
+  ],
+  "author": "Andrew Messier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/messman/brack-it/issues"
+  },
+  "homepage": "https://github.com/messman/brack-it#readme",
+  "dependencies": {
+    "@types/react": "^16.0.2",
+    "@types/react-dom": "^15.5.2",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.16",
+    "css-loader": "^0.28.4",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "html-webpack-plugin": "^2.30.1",
+    "node-sass": "^4.5.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.18.2",
+    "ts-loader": "^2.3.2",
+    "typescript": "^2.4.2",
+    "webpack": "^3.5.4",
+    "webpack-merge": "^4.1.0"
+  }
 }

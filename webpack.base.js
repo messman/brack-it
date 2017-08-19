@@ -1,8 +1,21 @@
 const path = require("path");
 
+const buildTime = (new Date()).toString();
+
+// Cleans a directory
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 
-module.exports = {
+const htmlPluginOptions = {
+	title: "Brack-It",
+	template: "./src/index.template.ejs",
+	minify: false,
+	xhtml: true, // Use XHTML-compliance
+	user: {
+		buildTime: buildTime
+	}
+};
+
+const baseWebpackOptions = {
 	entry: {
 		index: "./src/ts/entries/index.tsx",
 	},
@@ -41,4 +54,9 @@ module.exports = {
 	//	"react": "React",
 	//	"react-dom": "ReactDOM"
 	//},
+};
+
+module.exports = {
+	html: htmlPluginOptions,
+	base: baseWebpackOptions
 };

@@ -1,9 +1,18 @@
 console.log("~~~~~ DEVELOPMENT build ~~~~~");
 
 const merge = require("webpack-merge");
-const baseConfig = require("./webpack.base.js");
+const base = require("./webpack.base.js");
 
-module.exports = merge(baseConfig, {
+// Creates the HTML file for you
+const HTMLWebpackPlugin = require("html-webpack-plugin");
+
+const totalHTMLPluginOptions = merge(base.html,
+	{
+		title: "Brack-It (Dev)"
+	}
+);
+
+module.exports = merge(base.base, {
 
 	devtool: "cheap-module-source-map",
 
@@ -18,5 +27,9 @@ module.exports = merge(baseConfig, {
 				]
 			}
 		]
-	}
+	},
+
+	plugins: [
+		new HTMLWebpackPlugin(totalHTMLPluginOptions)
+	]
 });
