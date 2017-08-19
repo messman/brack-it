@@ -1,5 +1,7 @@
 const path = require("path");
 
+const webpack = require("webpack");
+
 const buildTime = (new Date()).toString();
 
 // Cleans a directory
@@ -18,9 +20,14 @@ const htmlPluginOptions = {
 const baseWebpackOptions = {
 	entry: {
 		index: "./src/ts/entries/index.tsx",
+		vendor: [
+			"react",
+			"react-dom"
+		]
 	},
 	output: {
-		filename: "webpack.entry.[name].js",
+		filename: "entry.[name].[chunkhash].js",
+		hashDigestLength: 10,
 		path: path.resolve(__dirname, "./dist")
 	},
 
@@ -43,7 +50,16 @@ const baseWebpackOptions = {
 	},
 
 	plugins: [
+		// Clean the "dist" folder each time
 		new CleanWebpackPlugin(["./dist"]),
+		// Filter out all the vendor libraries and put that in its own chunk
+		new webpack.optimize.CommonsChunkPlugin({
+			name: "vendor"
+		}),
+		// Filter out all the "Webpack" manifest code and put that in its own chunk
+		new webpack.optimize.CommonsChunkPlugin({
+			name: "runtime"
+		})
 	]
 
 	// When importing a module whose path matches one of the following, just

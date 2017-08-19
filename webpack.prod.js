@@ -1,5 +1,7 @@
 console.log("~~~~~ PRODUCTION build ~~~~~");
 
+const webpack = require("webpack");
+
 const merge = require("webpack-merge");
 const base = require("./webpack.base.js");
 
@@ -39,6 +41,8 @@ module.exports = merge(base.base, {
 	},
 
 	plugins: [
+		// Change the module id (unique identifier) to go by path instead of number, so hash names change less often.
+		new webpack.HashedModuleIdsPlugin(),
 		extractSass,
 		new HTMLWebpackPlugin(totalHTMLPluginOptions)
 	]
