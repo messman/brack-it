@@ -16,6 +16,11 @@ module.exports = merge(base.base, {
 
 	devtool: "cheap-module-source-map",
 
+	devServer: {
+		port: 8888,
+		contentBase: "./dist"
+	},
+
 	module: {
 		rules: [
 			{
