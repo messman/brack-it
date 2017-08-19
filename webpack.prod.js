@@ -41,9 +41,17 @@ module.exports = merge(base.base, {
 	},
 
 	plugins: [
+		new webpack.DefinePlugin({
+			'process.env': {
+				'NODE_ENV': JSON.stringify('production')
+			}
+		}),
+		new webpack.optimize.UglifyJsPlugin({
+			sourceMap: true
+		}),
 		// Change the module id (unique identifier) to go by path instead of number, so hash names change less often.
 		new webpack.HashedModuleIdsPlugin(),
 		extractSass,
-		new HTMLWebpackPlugin(totalHTMLPluginOptions)
+		new HTMLWebpackPlugin(totalHTMLPluginOptions),
 	]
 });
