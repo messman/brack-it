@@ -5,18 +5,16 @@ import { createStore, applyMiddleware } from "redux";
 
 import Test from "../components/test-component";
 
-import * as Data from "../data/index";
-
+import { State } from "../data/state";
+import allReducers from "../data/reducers";
 
 const store = createStore(
-	Data.reducer
+	allReducers,
 );
-
 
 ReactDOM.render(
 	<Provider store={store} >
 		<div>
-
 			<Test name="World 1" />
 			<Test name="World 2" />
 		</div>
