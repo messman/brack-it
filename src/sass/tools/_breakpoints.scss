@@ -1,0 +1,96 @@
+/* BREAKPOINTS ////////////////// */
+$break-L-1: 320;
+$break-1-2: 600;
+$break-2-3: 900;
+$break-3-4: 1200;
+$break-4-5: 1800;
+$break-5-H: 2400;
+$breaks: (
+	"L",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"H"
+);
+
+@function doPx($int) {
+   @return #{$int}px;
+}
+
+$breaks-min-width: (
+	"1": doPx($break-L-1),
+	"2": doPx($break-1-2),
+	"3": doPx($break-2-3),
+	"4": doPx($break-3-4),
+	"5": doPx($break-4-5),
+	"H": doPx($break-5-H),
+);
+$breaks-max-width: (
+	"L": doPx($break-L-1 - 1),
+	"1": doPx($break-1-2 - 1),
+	"2": doPx($break-2-3 - 1),
+	"3": doPx($break-3-4 - 1),
+	"4": doPx($break-4-5 - 1),
+	"5": doPx($break-4-5 - 1),
+);
+
+//http://www.sitepoint.com/managing-responsive-breakpoints-sass/
+@mixin check-breakpoint($break) {
+   @if index($breaks, $break) == null {
+      @error "Breakpoint does not exist";
+   }
+}
+@mixin break-min($break) {
+   @include check-breakpoint($break);
+   @if map-has-key($breaks-min-width, $break) {
+      // 1-5, H
+      @media (min-width: map-get($breaks-min-width, $break)) {
+         @content;
+      }
+   }
+   @else {
+      // L
+      @content;  
+   }
+}
+@mixin break-max($break) {
+   @include check-breakpoint($break);
+   @if map-has-key($breaks-max-width, $break) {
+      // L, 1-5
+      @media (max-width: map-get($breaks-max-width, $break)) {
+         @content;
+      }
+   }
+   @else {
+      // H
+      @content;  
+   }
+}
+@mixin break-single($break) {
+   @include check-breakpoint($break);
+   @if map-has-key($breaks-max-width, $break) {
+      // L, 1-5
+      @if map-has-key($breaks-min-width, $break) {
+         // 1-5
+         @media (min-width: map-get($breaks-min-width, $break)) and (max-width: map-get($breaks-max-width, $break)) {
+            @content;
+         }
+      }
+      @else {
+         // L
+         @media (max-width: map-get($breaks-max-width, $break)) {
+            @content;
+         }
+      }
+   }
+   @else {
+      // H
+      @media (min-width: map-get($breaks-min-width, $break)) {
+         @content;
+      }
+   }
+}
+
+/* BREAKPOINTS ////////////////// */
