@@ -9,7 +9,8 @@
 		"noImplicitReturns": false,
 		"noImplicitThis": false,
 		"outDir": "./build",
-		"target": "es2015"
+		"target": "es2015",
+		"moduleResolution": "node"
 	},
 	"exclude": [
 		"node_modules"

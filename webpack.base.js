@@ -22,7 +22,9 @@ const baseWebpackOptions = {
 		index: "./src/ts/entries/index.tsx",
 		vendor: [
 			"react",
-			"react-dom"
+			"react-dom",
+			"react-redux",
+			"redux"
 		]
 	},
 	output: {
