@@ -1,0 +1,83 @@
+@import "src/sass/tools/_breakpoints";
+
+$grid-padding: 20px;
+
+@mixin create-grid-cols($classname) {
+	.grid {
+		// Direction of items (default: row)
+		&.#{$classname}-row {
+			flex-direction: row;
+		}
+		&.#{$classname}-column {
+			flex-direction: column;
+		}
+
+		// Main-axis (above) alignment (default: flex-start)
+		&.#{$classname}-left {
+			justify-content: flex-start;
+		}
+		&.#{$classname}-h-center {
+			justify-content: center;
+		}
+		&.#{$classname}-right {
+			justify-content: flex-end;
+		}
+		&.#{$classname}-around {
+			justify-content: space-around;
+		}
+		&.#{$classname}-between {
+			justify-content: space-between;
+		}
+
+		// Cross-axis alignment (default: flex-start)
+		&.#{$classname}-top {
+			align-items: flex-start;
+		}
+		&.#{$classname}-bottom {
+			align-items: flex-end;
+		}
+		&.#{$classname}-v-center {
+			align-items: center;
+		}
+		&.#{$classname}-baseline {
+			align-items: baseline;
+		}
+		&.#{$classname}-stretch {
+			align-items: stretch;
+		}
+
+		// Force children to each take up as much space as possible
+		&.#{$classname}-fill > * {
+			flex: 1
+		}
+		// Make a child take up as much space as possible
+		> *.#{$classname}-filled {
+			flex: 1;
+		}
+
+		@for $index from 1 through 12 {
+			> *.#{$classname}-#{$index} {
+				flex: 0 0 percentage($index/12);
+			}
+			 > *.#{$classname}-push-#{$index} {
+				margin-left: percentage($index/12);
+			}
+		}
+	}
+ }
+ 
+ .grid {
+	display: flex;
+	flex-wrap: wrap;
+	padding: $grid-padding / 2;
+	> * {
+		flex: 0 0 100%;
+		padding: $grid-padding / 2;
+	}
+ }
+ 
+ @each $break in $breaks {
+	@include break-min($break) {
+		@include create-grid-cols($break);
+	}
+ }
