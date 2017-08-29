@@ -8,6 +8,7 @@ import Test from "../components/test-component";
 import { State } from "../data/state";
 import allReducers from "../data/reducers";
 import App from "../components/app";
+import PlayersList from "../containers/players-list";
 
 // Import our styles
 import "../../sass/common/index.scss";
@@ -19,8 +20,7 @@ const store = createStore(
 ReactDOM.render(
 	<Provider store={store} >
 		<App>
-			<Test name="World 1" />
-			<Test name="World 2" />
+			<PlayersList />
 		</App>
 	</Provider>,
 	document.getElementById("root")
