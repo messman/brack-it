@@ -69,9 +69,13 @@ $grid-padding: 20px;
  .grid {
 	display: flex;
 	flex-wrap: wrap;
-	padding: $grid-padding / 2;
-	> * {
+	&.grid-pad {
+		padding: $grid-padding / 2;
+	}
+	&.spread > * {
 		flex: 0 0 100%;
+	}
+	> * {
 		padding: $grid-padding / 2;
 	}
  }

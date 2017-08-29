@@ -7,6 +7,10 @@ import Test from "../components/test-component";
 
 import { State } from "../data/state";
 import allReducers from "../data/reducers";
+import App from "../components/app";
+
+// Import our styles
+import "../../sass/common/index.scss";
 
 const store = createStore(
 	allReducers,
@@ -14,10 +18,10 @@ const store = createStore(
 
 ReactDOM.render(
 	<Provider store={store} >
-		<div>
+		<App>
 			<Test name="World 1" />
 			<Test name="World 2" />
-		</div>
+		</App>
 	</Provider>,
 	document.getElementById("root")
 );
