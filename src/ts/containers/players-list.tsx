@@ -6,6 +6,8 @@ import * as DataHelpers from "../data/types";
 import { actions } from "../data/actions";
 import { Player } from "../data/actions/players";
 
+import "../../sass/containers/players-list.scss";
+
 interface PlayersListOwnState {
 	selected: number,
 	newPlayerText: string
@@ -34,7 +36,8 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 
 	private addPlayer = () => {
 		const value = this.state.newPlayerText;
-		this.props.dispatcher.create(value);
+		if (value)
+			this.props.dispatcher.create(value);
 	}
 
 	private handleChange = (e) => {
@@ -49,14 +52,20 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 
 	render() {
 		return (
-			<div>
+			<div className="react-players-list">
 				<div>
-					<label>Add a player<input value={this.state.newPlayerText} onChange={this.handleChange} /></label>
-					<button onClick={this.addPlayer} >Add</button>
+					<input placeholder="Type a new player name" value={this.state.newPlayerText} onChange={this.handleChange} />
+					<button onClick={this.addPlayer} disabled={!this.state.newPlayerText}>Add New Player</button>
 				</div>
 				<ul>
-					{this.props.store.map((player) => {
-						return <li key={player.id} onClick={this.deletePlayer.bind(this, player.id)} >{player.name}</li>
+					{this.props.store.map((player, index) => {
+						return (
+							<li key={player.id} >
+								<span className="list-index">{index}</span>
+								<span>{player.name}</span>
+								<button onClick={this.deletePlayer.bind(this, player.id)}>Remove</button>
+							</li>
+						)
 					})}
 				</ul>
 			</div>
