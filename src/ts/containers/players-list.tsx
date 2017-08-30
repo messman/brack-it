@@ -17,9 +17,8 @@ function mapStateToProps(state: State) {
 function mapDispatchToProps(dispatch) {
 	return DataHelpers.wrapDispatcher(Redux.bindActionCreators(actions.players, dispatch));
 }
-const a = DataHelpers.getReturnType(mapStateToProps);
-const b = DataHelpers.getReturnType(mapDispatchToProps);
-type PlayersListProps = typeof a & typeof b;
+const combined = DataHelpers.getCompositeType(mapStateToProps, mapDispatchToProps);
+type PlayersListProps = typeof combined;
 
 class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState> {
 

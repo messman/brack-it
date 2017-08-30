@@ -28,6 +28,13 @@ export function getReturnType<RT>(expression: (...params: any[]) => RT): RT {
 	return {} as RT;
 }
 
+export function getCompositeType<A, B, C>(mapState: (...args) => A, mapDispatch: (...args) => B, props?: C) {
+	const a = getReturnType(mapState);
+	const b = getReturnType(mapDispatch);
+	type composite = typeof a & typeof b & typeof props;
+	return {} as composite;
+}
+
 export function wrapDispatcher<T>(arg: T) {
 	return {
 		dispatcher: arg
