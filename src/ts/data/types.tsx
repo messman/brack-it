@@ -4,6 +4,12 @@ type Action<T, P> = {
 	(payload: P): Action<T, P>
 }
 
+type ActionProcess<T, P, M> = {
+	type: T;
+	payload: P;
+	(input: M): Action<T, P>
+}
+
 export function CreateAction<T, P>(type: T): Action<T, P> {
 	const f: any = function (payload) { return { type, payload } };
 	f.type = type;
@@ -11,10 +17,10 @@ export function CreateAction<T, P>(type: T): Action<T, P> {
 	return g;
 }
 
-export function CreateActionProcess<T, P, M>(type: T, processor: (input: M) => P): Action<T, P> {
-	const f: any = function (payload) { return { type, payload: processor(payload) } };
+export function CreateActionProcess<T, P, M>(type: T, processor: (input: M) => P): ActionProcess<T, P, M> {
+	const f: any = function (input) { return { type, payload: processor(input) } };
 	f.type = type;
-	const g: Action<T, P> = f;
+	const g: ActionProcess<T, P, M> = f;
 	return g;
 }
 
