@@ -3,8 +3,6 @@ import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 
-import Test from "../components/test-component";
-
 import { State } from "../data/state";
 import allReducers from "../data/reducers";
 import App from "../components/app";

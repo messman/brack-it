@@ -16,4 +16,5 @@ const createPlayer = function (name: string): Player {
 export default {
 	create: CreateActionProcess<"CREATE", Player, string>("CREATE", createPlayer),
 	delete: CreateAction<"DELETE", number>("DELETE"),
+	updateName: CreateAction<"UPDATE_NAME", Player>("UPDATE_NAME"),
 }

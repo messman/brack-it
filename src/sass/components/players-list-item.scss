@@ -1,0 +1,49 @@
+
+.list-item {
+
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	display: block;
+	margin: 5px 0;
+	height: 40px;
+	display: flex;
+
+	.list-index, .list-name, .list-delete {
+		height: 100%;
+		line-height: 40px;
+	}
+
+	.list-index, .list-delete {
+		display: inline-block;
+		padding: 0 10px;
+		min-width: 40px;
+		text-align: center;
+		background-color: #eee;
+		border: none;
+	}
+
+	.list-delete {
+		font-size: 1.5rem;
+	cursor: pointer;
+	
+	}
+
+	.list-name {
+		flex: 1;
+		padding: 0 10px;
+	cursor: pointer;
+	
+
+		&:hover {
+			background-color: #E2EBF5;
+		}
+	}
+
+	.list-input {
+		font-size: 1rem;
+	}
+
+
+
+
+}
