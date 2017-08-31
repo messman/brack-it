@@ -56,6 +56,13 @@ export class PlayersListItem extends React.Component<PlayersListItemProps, Playe
 	componentDidUpdate() {
 		if (this.state.isEditing && this.input) {
 			this.input.focus();
+			setTimeout(() => {
+				if (this.input && document.activeElement === this.input) {
+					// *2 in case "\n" is 2 characters
+					const valLength = this.input.value.length * 2;
+					this.input.setSelectionRange(valLength, valLength);
+				}
+			}, 10)
 		}
 	}
 
