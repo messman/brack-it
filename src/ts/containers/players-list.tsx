@@ -7,7 +7,7 @@ import { actions } from "../data/actions";
 import { Player } from "../data/actions/players";
 import { PlayersListItem } from "../components/players-list-item";
 
-import "../../sass/containers/players-list.scss";
+import "sass/containers/players-list.scss";
 
 interface PlayersListOwnState {
 	selected: number,

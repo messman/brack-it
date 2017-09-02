@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import "../../sass/components/app.scss";
+import "sass/components/app.scss";
 
 export default function (props: React.HTMLProps<HTMLDivElement>) {
 	return (

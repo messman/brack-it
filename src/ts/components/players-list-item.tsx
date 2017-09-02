@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Player } from "../data/actions/players";
 
-import "../../sass/components/players-list-item.scss";
+import "sass/components/players-list-item.scss";
 
 interface PlayersListItemState {
 	isEditing: boolean,

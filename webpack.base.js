@@ -35,7 +35,10 @@ const baseWebpackOptions = {
 
 	resolve: {
 		// Add '.ts' and '.tsx' as resolvable extensions (so that you don't need to type out the extension yourself).
-		extensions: [".ts", ".tsx", ".js", ".json"]
+		extensions: [".ts", ".tsx", ".js", ".json"],
+
+		// Resolve imports from node_modules or src
+		modules: ["node_modules", "src"]
 	},
 
 	module: {

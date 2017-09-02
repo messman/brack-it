@@ -9,7 +9,7 @@ import App from "../components/app";
 import PlayersList from "../containers/players-list";
 
 // Import our styles
-import "../../sass/common/index.scss";
+import "sass/common/index.scss";
 
 const store = createStore(
 	allReducers,
