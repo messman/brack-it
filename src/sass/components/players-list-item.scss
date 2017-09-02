@@ -7,13 +7,14 @@
 	margin: 5px 0;
 	height: 40px;
 	display: flex;
-
-	.list-index, .list-name, .list-delete {
-		height: 100%;
-		line-height: 40px;
+	
+	&:hover {
+		background-color: #E4E9EE;
 	}
 
 	.list-index, .list-delete {
+		height: 100%;
+		line-height: 40px;
 		display: inline-block;
 		padding: 0 10px;
 		min-width: 40px;
@@ -24,23 +25,24 @@
 
 	.list-delete {
 		font-size: 1.5rem;
-	cursor: pointer;
-	
+		cursor: pointer;
+	}
+
+	.list-name, .list-input {
+		height: 29px;
+		line-height: 29px;
+		margin: 5px;
+		padding: 0;
 	}
 
 	.list-name {
 		flex: 1;
-		padding: 0 10px;
-	cursor: pointer;
-	
-
-		&:hover {
-			background-color: #E2EBF5;
-		}
+		cursor: pointer;
 	}
 
 	.list-input {
 		font-size: 1rem;
+		border: 0;
 	}
 
 
