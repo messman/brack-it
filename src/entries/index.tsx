@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 
 import { reducers } from "../data/";
-import { App, PlayersList } from "../components";
+import { App } from "../components";
 
 const store = createStore(
 	reducers
@@ -12,9 +12,7 @@ const store = createStore(
 
 ReactDOM.render(
 	<Provider store={store} >
-		<App>
-			<PlayersList />
-		</App>
+		<App />
 	</Provider>,
 	document.getElementById("root")
 );

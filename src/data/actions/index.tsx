@@ -1,16 +1,16 @@
-import counterActions from "./counter";
-export * from "./counter";
+import orderActions from "./order";
+export * from "./order";
 import playerActions from "./players";
 export * from "./players";
 
-type CounterActionsType = typeof counterActions[keyof typeof counterActions];
+type OrderActionsType = typeof orderActions[keyof typeof orderActions];
 type PlayerActionsType = typeof playerActions[keyof typeof playerActions];
 
-export type ActionTypes = CounterActionsType | PlayerActionsType;
+export type ActionTypes = OrderActionsType | PlayerActionsType;
 
-export default {
-	counter: {
-		...counterActions,
+export const actions = {
+	order: {
+		...orderActions,
 	},
 	players: {
 		...playerActions

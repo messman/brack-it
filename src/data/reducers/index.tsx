@@ -1,10 +1,14 @@
 import { combineReducers } from "redux";
 
-import State from "../state";
-import { counterReducer } from "./counter";
-import { playersReducer } from "./players";
+import { AppOrderState, appOrderReducer } from "./order";
+import { PlayersState, playersReducer } from "./players";
 
-export default combineReducers<State>({
-	counter: counterReducer,
+export interface State {
+	order: AppOrderState,
+	players: PlayersState
+}
+
+export const reducers = combineReducers<State>({
+	appOrder: appOrderReducer,
 	players: playersReducer
 });
