@@ -3,4 +3,4 @@ build
 dist
 TODO.txt
 npm-debug.log
-settings.json
+.vscode
