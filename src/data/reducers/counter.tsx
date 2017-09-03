@@ -1,4 +1,4 @@
-import { actions, ActionTypes } from "../actions";
+import actions, { ActionTypes } from "../actions";
 
 export type CounterState = {
 	value: number;

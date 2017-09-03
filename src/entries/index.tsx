@@ -3,16 +3,11 @@ import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 
-import { State } from "../data/state";
-import allReducers from "../data/reducers";
-import App from "../components/app";
-import PlayersList from "../containers/players-list";
-
-// Import our styles
-import "sass/common/index.scss";
+import { reducers } from "../data/";
+import { App, PlayersList } from "../components";
 
 const store = createStore(
-	allReducers,
+	reducers,
 );
 
 ReactDOM.render(

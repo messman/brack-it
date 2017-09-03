@@ -1,13 +1,11 @@
 import * as React from "react";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
-import { State } from "../data/state";
-import * as DataHelpers from "../data/types";
-import { actions } from "../data/actions";
-import { Player } from "../data/actions/players";
-import { PlayersListItem } from "../components/players-list-item";
 
-import "sass/containers/players-list.scss";
+import { State, actions, wrapStore, wrapDispatcher, getCompositeType } from "../../data";
+import { PlayersListItem } from "../";
+
+import "./players-list.scss";
 
 interface PlayersListOwnState {
 	selected: number,
@@ -15,12 +13,12 @@ interface PlayersListOwnState {
 }
 
 function mapStateToProps(state: State) {
-	return DataHelpers.wrapStore(state.players);
+	return wrapStore(state.players);
 }
-function mapDispatchToProps(dispatch) {
-	return DataHelpers.wrapDispatcher(Redux.bindActionCreators(actions.players, dispatch));
+function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
+	return wrapDispatcher(Redux.bindActionCreators(actions.players, dispatch));
 }
-const combined = DataHelpers.getCompositeType(mapStateToProps, mapDispatchToProps);
+const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
 type PlayersListProps = typeof combined;
 
 class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState> {

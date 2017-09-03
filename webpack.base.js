@@ -19,7 +19,7 @@ const htmlPluginOptions = {
 
 const baseWebpackOptions = {
 	entry: {
-		index: "./src/ts/entries/index.tsx",
+		index: "./src/entries/index.tsx",
 		vendor: [
 			"react",
 			"react-dom",
@@ -38,7 +38,7 @@ const baseWebpackOptions = {
 		extensions: [".ts", ".tsx", ".js", ".json"],
 
 		// Resolve imports from node_modules or src
-		modules: ["node_modules", "src"]
+		modules: ["node_modules"]
 	},
 
 	module: {

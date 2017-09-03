@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 
-import { State } from "../state";
+import State from "../state";
 import { counterReducer } from "./counter";
 import { playersReducer } from "./players";
 

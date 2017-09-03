@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Player } from "../data/actions/players";
+import { actions, Player } from "../../data";
 
-import "sass/components/players-list-item.scss";
+import "./players-list-item.scss";
 
 interface PlayersListItemState {
 	isEditing: boolean,
@@ -15,7 +15,7 @@ interface PlayersListItemProps {
 	onDelete: () => void
 }
 
-export class PlayersListItem extends React.Component<PlayersListItemProps, PlayersListItemState> {
+export default class PlayersListItem extends React.Component<PlayersListItemProps, PlayersListItemState> {
 
 	constructor(props: PlayersListItemProps) {
 		super(props);
@@ -73,7 +73,7 @@ export class PlayersListItem extends React.Component<PlayersListItemProps, Playe
 		let nameEl: JSX.Element = null;
 
 		if (this.state.isEditing) {
-			const setRef = (input) => { this.input = input };
+			const setRef = (input: HTMLInputElement) => { this.input = input };
 			nameEl = <input className="list-name list-input" ref={setRef} onBlur={this.onBlur} onChange={this.onEdit} value={this.state.playerName} />
 		}
 		else {

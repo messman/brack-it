@@ -5,7 +5,7 @@
 		"checkJs": false,
 		"jsx": "react",
 		"module": "es2015",
-		"noImplicitAny": false,
+		"noImplicitAny": true,
 		"noImplicitReturns": false,
 		"noImplicitThis": false,
 		"outDir": "./build",
@@ -16,7 +16,7 @@
 		"node_modules"
 	],
 	"include": [
-		"src/ts/**/*"
+		"src/**/*"
 	],
 	"compileOnSave": false
 }

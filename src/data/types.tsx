@@ -11,14 +11,14 @@ type ActionProcess<T, P, M> = {
 }
 
 export function CreateAction<T, P>(type: T): Action<T, P> {
-	const f: any = function (payload) { return { type, payload } };
+	const f: any = function (payload: P) { return { type, payload } };
 	f.type = type;
 	const g: Action<T, P> = f;
 	return g;
 }
 
 export function CreateActionProcess<T, P, M>(type: T, processor: (input: M) => P): ActionProcess<T, P, M> {
-	const f: any = function (input) { return { type, payload: processor(input) } };
+	const f: any = function (input: M) { return { type, payload: processor(input) } };
 	f.type = type;
 	const g: ActionProcess<T, P, M> = f;
 	return g;
@@ -28,7 +28,7 @@ export function getReturnType<RT>(expression: (...params: any[]) => RT): RT {
 	return {} as RT;
 }
 
-export function getCompositeType<A, B, C>(mapState: (...args) => A, mapDispatch: (...args) => B, props?: C) {
+export function getCompositeType<A, B, C>(mapState: (...args: any[]) => A, mapDispatch: (...args: any[]) => B, props?: C) {
 	const a = getReturnType(mapState);
 	const b = getReturnType(mapDispatch);
 	type composite = typeof a & typeof b & typeof props;

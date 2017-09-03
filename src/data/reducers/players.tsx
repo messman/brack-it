@@ -1,4 +1,4 @@
-import { actions, ActionTypes } from "../actions";
+import actions, { ActionTypes } from "../actions";
 import { Player } from "../actions/players";
 
 export type PlayersState = Player[];
