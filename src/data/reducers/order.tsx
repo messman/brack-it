@@ -9,7 +9,7 @@ const defaultState: AppOrderState = {
 }
 
 export function appOrderReducer(state: AppOrderState = defaultState, action: ActionTypes): AppOrderState {
-	if (action.type === actions.order.move.type) {
+	if (action.type === actions.appOrder.move.type) {
 		return {
 			order: action.payload
 		};

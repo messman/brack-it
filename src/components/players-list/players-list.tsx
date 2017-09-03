@@ -7,6 +7,10 @@ import { PlayersListItem } from "../";
 
 import "./players-list.scss";
 
+interface PlayersListOwnProps {
+	onGo: () => void;
+}
+
 interface PlayersListOwnState {
 	selected: number,
 	newPlayerText: string
@@ -19,7 +23,7 @@ function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
 	return wrapDispatcher(Redux.bindActionCreators(actions.players, dispatch));
 }
 const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
-type PlayersListProps = typeof combined;
+type PlayersListProps = typeof combined & PlayersListOwnProps;
 
 class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState> {
 
@@ -81,7 +85,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 
 		let goButton: JSX.Element = null;
 		if (this.props.store.length > 1) {
-			goButton = <button className="list-go-button">Start with <strong>{this.props.store.length}</strong> players</button>
+			goButton = <button onClick={this.props.onGo} className="list-go-button">Start with <strong>{this.props.store.length}</strong> players</button>
 		}
 
 		return (

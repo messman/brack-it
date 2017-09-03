@@ -9,7 +9,7 @@ type PlayerActionsType = typeof playerActions[keyof typeof playerActions];
 export type ActionTypes = OrderActionsType | PlayerActionsType;
 
 export const actions = {
-	order: {
+	appOrder: {
 		...orderActions,
 	},
 	players: {

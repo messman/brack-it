@@ -4,7 +4,7 @@ import { AppOrderState, appOrderReducer } from "./order";
 import { PlayersState, playersReducer } from "./players";
 
 export interface State {
-	order: AppOrderState,
+	appOrder: AppOrderState,
 	players: PlayersState
 }
 
