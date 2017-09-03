@@ -78,6 +78,12 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 	}
 
 	render() {
+
+		let goButton: JSX.Element = null;
+		if (this.props.store.length > 1) {
+			goButton = <button className="list-go-button">Start with <strong>{this.props.store.length}</strong> players</button>
+		}
+
 		return (
 			<div className="react-players-list">
 				<div>
@@ -93,6 +99,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 						)
 					})}
 				</ul>
+				{goButton}
 			</div>
 		);
 	}

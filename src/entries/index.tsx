@@ -7,7 +7,7 @@ import { reducers } from "../data/";
 import { App, PlayersList } from "../components";
 
 const store = createStore(
-	reducers,
+	reducers
 );
 
 ReactDOM.render(
