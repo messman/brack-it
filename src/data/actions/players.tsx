@@ -2,19 +2,24 @@ import { CreateAction, CreateActionProcess } from "../types";
 
 export interface Player {
 	name: string,
-	id: number
+	reactId: number
 }
 
-let playerId: number = 0;
+let reactId: number = 0;
 const createPlayer = function (name: string): Player {
 	return {
 		name,
-		id: playerId++
+		reactId: reactId++
 	}
 }
 
+export interface UpdatePlayerNameArgs {
+	index: number,
+	name: string
+}
+
 export default {
-	create: CreateActionProcess<"CREATE", Player, string>("CREATE", createPlayer),
-	delete: CreateAction<"DELETE", number>("DELETE"),
-	updateName: CreateAction<"UPDATE_NAME", Player>("UPDATE_NAME"),
+	create: CreateActionProcess<"PLAYER_CREATE", Player, string>("PLAYER_CREATE", createPlayer),
+	delete: CreateAction<"PLAYER_DELETE", number>("PLAYER_DELETE"),
+	updateName: CreateAction<"PLAYER_UPDATE_NAME", UpdatePlayerNameArgs>("PLAYER_UPDATE_NAME"),
 }

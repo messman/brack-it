@@ -74,11 +74,8 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 		}
 	}
 
-	private updateName(id: number, name: string): void {
-		this.props.dispatcher.updateName({
-			id,
-			name
-		});
+	private updateName(index: number, name: string): void {
+		this.props.dispatcher.updateName({ index, name });
 	}
 
 	render() {
@@ -96,10 +93,10 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 				</div>
 				<ul>
 					{this.props.store.map((player, index) => {
-						const updateName: (name: string) => void = this.updateName.bind(this, player.id);
-						const deletePlayer: () => void = this.props.dispatcher.delete.bind(this, player.id);
+						const updateName: (name: string) => void = this.updateName.bind(this, index);
+						const deletePlayer: () => void = this.props.dispatcher.delete.bind(this, index);
 						return (
-							<PlayersListItem key={player.id} index={index} player={player} onUpdateName={updateName} onDelete={deletePlayer} />
+							<PlayersListItem key={player.reactId} index={index} player={player} onUpdateName={updateName} onDelete={deletePlayer} />
 						)
 					})}
 				</ul>

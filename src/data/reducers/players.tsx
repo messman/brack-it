@@ -3,7 +3,7 @@ import { Player } from "../actions/players";
 
 export type PlayersState = Player[];
 
-let id = 500;
+let reactId = 500;
 const defaultState: PlayersState = [
 	"Alex",
 	"Cameron",
@@ -22,25 +22,18 @@ const defaultState: PlayersState = [
 	"Paul",
 	"Ramses",
 	"Raven"
-].map((name) => { return { name, id: id++ } });
+].map((name) => { return { name, reactId: reactId++ } });
 
 export function playersReducer(state: PlayersState = defaultState, action: ActionTypes): PlayersState {
 	if (action.type === actions.players.create.type) {
 		return [...state, action.payload];
 	}
 	else if (action.type === actions.players.delete.type) {
-		return state.filter((player) => {
-			return player.id !== action.payload;
-		});
+		state.splice(action.payload, 1);
+		return state;
 	}
 	else if (action.type === actions.players.updateName.type) {
-		state.some((player) => {
-			if (player.id === action.payload.id) {
-				player.name = action.payload.name
-				return true;
-			}
-			return false;
-		});
+		state[action.payload.index].name = action.payload.name;
 	}
 	return state;
 }

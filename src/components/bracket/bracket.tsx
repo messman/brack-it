@@ -2,59 +2,100 @@ import * as React from "react";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
 
-import { State, actions, wrapStore, wrapDispatcher, getReturnType } from "../../data";
+import BracketMatchup, { BracketMatchupData } from "../bracket-matchup/bracket-matchup";
 
-import { Matchup, BracketCreator } from "../../services/bracket-maker";
+import { State, actions, wrapStore, wrapDispatcher, getCompositeType } from "../../data";
+import { Player, Matchup, MatchupActionCreateArgs } from "../../data";
 
 import "./bracket.scss";
 
 function mapStateToProps(state: State) {
-	return wrapStore(state.players);
+	return wrapStore({
+		players: state.players,
+		bracket: state.bracket
+	});
 }
-const combined = getReturnType(mapStateToProps);
+function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
+	return wrapDispatcher(Redux.bindActionCreators(actions.bracket, dispatch));
+}
+const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
 type BracketProps = typeof combined;
 
 class Bracket extends React.Component<BracketProps> {
 
 	constructor(props: BracketProps) {
 		super(props);
-
-		this.matchups = BracketCreator.createPlayersBracket(this.props.store);
-		this.bracket = this.matchups[this.matchups.length - 1];
 	}
 
-	private matchups: Matchup[] = [];
-	private bracket: Matchup = null;
+	componentWillMount() {
+		if (!this.props.store.bracket.matchups.length) {
+			this.props.dispatcher.create({
+				players: this.props.store.players
+			});
+		}
+	}
+
+	renderRound(round: Matchup[], lastRound: Matchup[], players: Player[], roundIndex: number, overallIndex: number): JSX.Element {
+		const matchups: JSX.Element[] = [];
+		for (let i = 0; i < round.length; i++) {
+
+			const matchup = round[i];
+			const precedingMatchPlayers = matchup.preceding.map<string>(function (lastRoundIndex) {
+				const lastRoundMatchup = lastRound[lastRoundIndex];
+				if (lastRoundMatchup.winner !== -1)
+					return players[lastRoundMatchup.winner].name;
+				return "Winner of match " + ((overallIndex - lastRound.length) + lastRoundIndex + 1);
+			});
+			const firstTimePlayers = matchup.players.map<string>(function (playerIndex) {
+				return players[playerIndex].name;
+			});
+			const winner = matchup.winner !== -1 ? players[matchup.winner].name : "Not Yet Complete";
+
+			const data: BracketMatchupData = {
+				winner,
+				players: [...firstTimePlayers, ...precedingMatchPlayers],
+				overallIndex: overallIndex + i,
+				roundIndex
+			};
+			const matchupElement: JSX.Element = <BracketMatchup key={matchup.reactId} data={data} />;
+			matchups.push(matchupElement);
+
+		}
+		return (
+			<div key={roundIndex}>
+				<h2>Round {roundIndex + 1}</h2>
+				{matchups}
+			</div>
+		);
+	}
+
+	renderBracket(): JSX.Element[] {
+		const players = this.props.store.players;
+		const matchups = this.props.store.bracket.matchups;
+
+		let overallIndex = 0;
+		let lastRound: Matchup[] = null;
+
+		const elements: JSX.Element[] = [];
+		for (let i = 0; i < matchups.length; i++) {
+			const round = matchups[i];
+			elements.push(this.renderRound(round, lastRound, players, i, overallIndex));
+			overallIndex += round.length;
+			lastRound = round;
+		}
+		return elements;
+	}
 
 	render() {
-
-		let count = 0;
-		const make = (matchup: Matchup) => {
-			let inner: JSX.Element = null;
-			if (matchup.players && matchup.players.length) {
-				const innerList = matchup.players.map<JSX.Element>((m) => {
-					return make(m);
-				})
-				inner = <ul>{innerList}</ul>
-			}
-
-			return (
-				<li key={count++}>
-					<span>{matchup.winner ? matchup.winner.name : "TBD"}</span>
-					{inner}
-				</li>
-			)
-		}
-
-		const tree = <ul>{make(this.bracket)}</ul>;
-
+		console.log(this.props.store.bracket.matchups)
+		const bracket = this.renderBracket();
 		return (
 			<div className="react-bracket">
-				<p>Bracket Time! We need to make a bracket for {this.props.store.length} players.</p>
-				{tree}
+				<p>Here's a bracket for {this.props.store.players.length} players:</p>
+				{bracket}
 			</div>
 		);
 	}
 }
 
-export default ReactRedux.connect(mapStateToProps)(Bracket);
+export default ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Bracket);

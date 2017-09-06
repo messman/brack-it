@@ -68,7 +68,7 @@ export default class PlayersListItem extends React.Component<PlayersListItemProp
 
 	render() {
 		const { index, onDelete } = this.props;
-		const { id, name } = this.props.player;
+		const { name } = this.props.player;
 
 		let nameEl: JSX.Element = null;
 
