@@ -1,6 +1,6 @@
+$borderColor: #ccc;
 
 .react-bracket-matchup {
-	$borderColor: #ccc;
 
 	border: 1px solid $borderColor;
 	margin-bottom: 10px;
@@ -10,25 +10,49 @@
 		//text-align: right;
 		font-style: italic;
 		font-weight: bold;
-		padding: 3px;
+		padding: 4px;
 		border-bottom: 1px solid $borderColor;
 	}
+}
 
-	.matchup-entry {
-		border-bottom: 1px solid $borderColor;
-		padding: 10px;
+.matchup-entry {
+	position: relative;
+	border-bottom: 1px solid $borderColor;
 
-		&:last-child {
-			border-bottom: 0;
-		}
+	&:last-child {
+		border-bottom: 0;
 	}
-
+	
+	&.matchup-winner .text-player {
+		font-weight: bold;
+	}
+	
 	.text-player {
 		display: block;
 		font-size: 1.5rem;
 	}
-
+	
 	.text-extra {
 		font-style: italic;
+	}
+	
+	.matchup-winner-button {
+		height: 100%;
+		float: right;
+	}
+}
+
+.entry-action .action-win {
+	$color: #f5f5f5;
+
+	border: 1px solid $borderColor;
+	background-color: $color;
+	cursor: pointer;
+
+	&:active {
+		background-color: darken($color, 20%);
+	}
+	&:hover {
+		background-color: darken($color, 10%);
 	}
 }

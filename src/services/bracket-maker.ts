@@ -83,7 +83,6 @@ export class BracketCreator {
 					player: -1
 				}
 			});
-			console.log("overall", overall);
 			tree = BracketCreator.createMatchupTree([...additionalInputs, ...inputs], true);
 		}
 

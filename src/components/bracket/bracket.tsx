@@ -35,22 +35,36 @@ class Bracket extends React.Component<BracketProps> {
 		}
 	}
 
+	createWinnerFunc(roundIndex: number, matchupIndex: number, playerIndex: number) {
+		return this.props.dispatcher.markWinner.bind(this, {
+			roundIndex,
+			matchupIndex,
+			playerIndex
+		});
+	}
+
 	renderRound(round: Matchup[], lastRound: Matchup[], players: Player[], roundIndex: number, overallIndex: number): JSX.Element {
 		const matchups: JSX.Element[] = [];
 		for (let i = 0; i < round.length; i++) {
 
 			const matchup = round[i];
-			const precedingMatchPlayers = matchup.preceding.map<BracketMatchupData>(function (lastRoundIndex) {
+			const canPlay = matchup.winner === -1 && matchup.preceding.every(function (lastRoundIndex) {
+				const lastRoundMatchup = lastRound[lastRoundIndex];
+				return lastRoundMatchup.winner !== -1;
+			});
+			const precedingMatchPlayers = matchup.preceding.map<BracketMatchupData>((lastRoundIndex) => {
 				const lastRoundMatchup = lastRound[lastRoundIndex];
 				return {
 					player: lastRoundMatchup.winner !== -1 ? players[lastRoundMatchup.winner] : null,
-					precedingMatchIndex: ((overallIndex - lastRound.length) + lastRoundIndex)
+					precedingMatchIndex: ((overallIndex - lastRound.length) + lastRoundIndex),
+					onWin: canPlay ? this.createWinnerFunc(roundIndex, i, lastRoundMatchup.winner) : null
 				}
 			});
-			const firstTimePlayers = matchup.players.map<BracketMatchupData>(function (playerIndex) {
+			const firstTimePlayers = matchup.players.map<BracketMatchupData>((playerIndex) => {
 				return {
 					player: players[playerIndex],
-					precedingMatchIndex: -1
+					precedingMatchIndex: -1,
+					onWin: canPlay ? this.createWinnerFunc(roundIndex, i, playerIndex) : null
 				}
 			});
 
@@ -85,7 +99,6 @@ class Bracket extends React.Component<BracketProps> {
 	}
 
 	render() {
-		console.log(this.props.store.bracket.matchups)
 		const bracket = this.renderBracket();
 		return (
 			<div className="react-bracket">

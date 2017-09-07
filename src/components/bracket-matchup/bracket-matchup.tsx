@@ -7,6 +7,7 @@ import "./bracket-matchup.scss";
 export interface BracketMatchupData {
 	player: Player,
 	precedingMatchIndex: number
+	onWin: () => void;
 }
 
 interface BracketMatchupOwnProps {
@@ -19,22 +20,31 @@ interface BracketMatchupOwnProps {
 export default class BracketMatchup extends React.Component<BracketMatchupOwnProps> {
 
 	static classes = {
-		sections: {
+		ui: {
 			header: "matchup-header",
 			body: "matchup-body"
 		},
 		entry: {
-			base: "matchup-entry",
-			winner: "matchup-winner",
-			regular: "matchup-player-regular",
-			opener: "matchup-player-opener",
-			tbd: "matchup-player-tbd"
-		},
-		text: {
-			player: "text-player",
-			extra: "text-extra"
+			base: "matchup-entry grid",
+			ui: {
+				data: {
+					base: "entry-data L-filled",
+					player: "text-player",
+					extra: "text-extra"
+				},
+				action: {
+					base: "entry-action grid L-stretch",
+					win: "action-win"
+				}
+			},
+			state: {
+				winner: "matchup-winner",
+				regular: "matchup-player-regular",
+				opener: "matchup-player-opener",
+				tbd: "matchup-player-tbd",
+			}
 		}
-	}
+	};
 
 	constructor(props: BracketMatchupOwnProps) {
 		super(props);
@@ -60,42 +70,48 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 		const matchPlayers = data.map<JSX.Element>((entry: BracketMatchupData, index) => {
 			const entryClasses = [classes.entry.base];
 			if (winnerReactId !== -1 && index === 0)
-				entryClasses.push(classes.entry.winner);
+				entryClasses.push(classes.entry.state.winner);
 
 			let playerText = "TBD";
 			let extraText: string = null;
 			if (entry.player) {
 				playerText = entry.player.name;
 				if (entry.precedingMatchIndex !== -1) {
-					entryClasses.push(classes.entry.regular);
+					entryClasses.push(classes.entry.state.regular);
 					extraText = "from match " + (entry.precedingMatchIndex + 1)
 				}
 				else {
-					entryClasses.push(classes.entry.opener);
+					entryClasses.push(classes.entry.state.opener);
 					extraText = "opening match";
 				}
 			}
 			else if (entry.precedingMatchIndex !== -1) {
-				entryClasses.push(classes.entry.tbd);
+				entryClasses.push(classes.entry.state.tbd);
 				playerText = "Winner of match " + (entry.precedingMatchIndex + 1);
 			}
 
 			const className = entryClasses.join(" ");
-
+			let winnerButton = entry.onWin ? <button className={classes.entry.ui.action.win} onClick={entry.onWin}>Winner</button> : null;
+			if (winnerButton) {
+				winnerButton = <div className={classes.entry.ui.action.base}>{winnerButton}</div>
+			}
 			return (
 				<div key={index} className={className}>
-					<span className={classes.text.player}>{playerText}</span>
-					<span className={classes.text.extra}>{extraText}</span>
-				</div>
+					<div className={classes.entry.ui.data.base}>
+						<span className={classes.entry.ui.data.player}>{playerText}</span>
+						<span className={classes.entry.ui.data.extra}>{extraText}</span>
+					</div>
+					{winnerButton}
+				</div >
 			);
 		});
 
 		return (
 			<div className="react-bracket-matchup">
-				<div className="matchup-header">
+				<div className={classes.ui.header}>
 					<span>Match {overallIndex + 1}</span>
 				</div>
-				<div className="matchup-body">
+				<div className={classes.ui.body}>
 					{matchPlayers}
 				</div>
 			</div>
