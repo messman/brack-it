@@ -40,26 +40,24 @@ class Bracket extends React.Component<BracketProps> {
 		for (let i = 0; i < round.length; i++) {
 
 			const matchup = round[i];
-			const precedingMatchPlayers = matchup.preceding.map<string>(function (lastRoundIndex) {
+			const precedingMatchPlayers = matchup.preceding.map<BracketMatchupData>(function (lastRoundIndex) {
 				const lastRoundMatchup = lastRound[lastRoundIndex];
-				if (lastRoundMatchup.winner !== -1)
-					return players[lastRoundMatchup.winner].name;
-				return "Winner of match " + ((overallIndex - lastRound.length) + lastRoundIndex + 1);
+				return {
+					player: lastRoundMatchup.winner !== -1 ? players[lastRoundMatchup.winner] : null,
+					precedingMatchIndex: ((overallIndex - lastRound.length) + lastRoundIndex)
+				}
 			});
-			const firstTimePlayers = matchup.players.map<string>(function (playerIndex) {
-				return players[playerIndex].name;
+			const firstTimePlayers = matchup.players.map<BracketMatchupData>(function (playerIndex) {
+				return {
+					player: players[playerIndex],
+					precedingMatchIndex: -1
+				}
 			});
-			const winner = matchup.winner !== -1 ? players[matchup.winner].name : "Not Yet Complete";
 
-			const data: BracketMatchupData = {
-				winner,
-				players: [...firstTimePlayers, ...precedingMatchPlayers],
-				overallIndex: overallIndex + i,
-				roundIndex
-			};
-			const matchupElement: JSX.Element = <BracketMatchup key={matchup.reactId} data={data} />;
+			const data: BracketMatchupData[] = [...firstTimePlayers, ...precedingMatchPlayers];
+			const winner = matchup.winner !== -1 ? players[matchup.winner] : null;
+			const matchupElement: JSX.Element = <BracketMatchup key={matchup.reactId} roundIndex={roundIndex} overallIndex={overallIndex + i} winner={winner} data={data} />;
 			matchups.push(matchupElement);
-
 		}
 		return (
 			<div key={roundIndex}>
