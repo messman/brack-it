@@ -5,7 +5,7 @@ export type AppOrderState = {
 }
 
 const defaultState: AppOrderState = {
-	order: AppOrder.show
+	order: AppOrder.create
 }
 
 export function appOrderReducer(state: AppOrderState = defaultState, action: ActionTypes): AppOrderState {

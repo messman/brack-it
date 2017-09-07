@@ -30,7 +30,7 @@ export function playersReducer(state: PlayersState = defaultState, action: Actio
 	}
 	else if (action.type === actions.players.delete.type) {
 		state.splice(action.payload, 1);
-		return state;
+		return [...state];
 	}
 	else if (action.type === actions.players.updateName.type) {
 		state[action.payload.index].name = action.payload.name;
