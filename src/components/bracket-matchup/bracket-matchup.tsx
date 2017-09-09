@@ -53,6 +53,7 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 	render() {
 		const { overallIndex, winner, data } = this.props;
 
+		// Re-arrange the list so the winner is always at the top.
 		const winnerReactId = winner ? winner.reactId : -1;
 		if (winnerReactId !== -1) {
 			for (var i = 1; i < data.length; i++) {
@@ -67,13 +68,16 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 		}
 
 		const classes = BracketMatchup.classes;
+		// Map each player to an entry element
 		const matchPlayers = data.map<JSX.Element>((entry: BracketMatchupData, index) => {
 			const entryClasses = [classes.entry.base];
+			// Add the class for a winner
 			if (winnerReactId !== -1 && index === 0)
 				entryClasses.push(classes.entry.state.winner);
 
 			let playerText = "TBD";
 			let extraText: string = null;
+			// Get the appropriate text based on the state
 			if (entry.player) {
 				playerText = entry.player.name;
 				if (entry.precedingMatchIndex !== -1) {
@@ -91,6 +95,7 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 			}
 
 			const className = entryClasses.join(" ");
+			// Add the button for selecting a winner if the function was provided
 			let winnerButton = entry.onWin ? <button className={classes.entry.ui.action.win} onClick={entry.onWin}>Winner</button> : null;
 			if (winnerButton) {
 				winnerButton = <div className={classes.entry.ui.action.base}>{winnerButton}</div>

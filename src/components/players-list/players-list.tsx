@@ -41,6 +41,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 		const value = this.state.newPlayerText;
 		if (value) {
 			this.props.dispatcher.create(value);
+			// Reset the input
 			this.setState({
 				newPlayerText: ""
 			});
@@ -51,8 +52,10 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 		let text = (e.target as HTMLInputElement).value;
 		let addedAny = false;
 		if (text) {
+			// Check that lots of text wasn't just pasted in with newlines and tabs.
 			const split = text.split(/\n|\t/);
 			if (split.length > 2) {
+				// If so, add a player for each separate string.
 				split
 					.map((str) => { return str.trim(); })
 					.filter((str) => { return !!str && str.length > 1 })
@@ -62,6 +65,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 					});
 			}
 		}
+		// At the end, reset if we added anything.
 		text = addedAny ? "" : text;
 		this.setState({
 			newPlayerText: text
@@ -69,6 +73,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 	}
 
 	private handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		// On enter, create.
 		if (e.key === "Enter") {
 			this.addPlayer();
 		}
@@ -80,6 +85,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 
 	render() {
 
+		// If we have enough players, allow us to begin
 		let goButton: JSX.Element = null;
 		if (this.props.store.length > 1) {
 			goButton = <button onClick={this.props.onGo} className="list-go-button">Start with <strong>{this.props.store.length}</strong> players</button>

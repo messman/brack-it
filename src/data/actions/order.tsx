@@ -1,5 +1,7 @@
 import { CreateAction } from "../types";
 
+// Likely to change
+/** The order of the app (as separate views). */
 export enum AppOrder {
 	create,
 	show

@@ -5,8 +5,10 @@ import { State, AppOrder, actions, wrapStore, wrapDispatcher, getCompositeType }
 import { PlayersList, Bracket } from "../";
 
 import "./app.scss"
+// Import the overall stylesheet
 import "../../style/index.scss";
 
+// Get the combined type of our state and action types
 function mapStateToProps(state: State) {
 	return wrapStore(state.appOrder);
 }
@@ -21,6 +23,7 @@ class App extends React.Component<AppProps> {
 		super(props);
 	}
 
+	// Move to the "show" view
 	moveToBracket = () => {
 		this.props.dispatcher.move(AppOrder.show);
 	}

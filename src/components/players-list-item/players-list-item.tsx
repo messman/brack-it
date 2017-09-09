@@ -55,6 +55,7 @@ export default class PlayersListItem extends React.Component<PlayersListItemProp
 	private input: HTMLInputElement = null;
 	componentDidUpdate() {
 		if (this.state.isEditing && this.input) {
+			// Focus, and put the cursor at the end of the input text
 			this.input.focus();
 			setTimeout(() => {
 				if (this.input && document.activeElement === this.input) {
@@ -72,6 +73,7 @@ export default class PlayersListItem extends React.Component<PlayersListItemProp
 
 		let nameEl: JSX.Element = null;
 
+		// If editing, show an input instead
 		if (this.state.isEditing) {
 			const setRef = (input: HTMLInputElement) => { this.input = input };
 			nameEl = <input className="list-name list-input" ref={setRef} onBlur={this.onBlur} onChange={this.onEdit} value={this.state.playerName} />

@@ -9,6 +9,7 @@ import { Player, Matchup, MatchupActionCreateArgs } from "../../data";
 
 import "./bracket.scss";
 
+// Get the combined type of our state and actions
 function mapStateToProps(state: State) {
 	return wrapStore({
 		players: state.players,
@@ -27,6 +28,7 @@ class Bracket extends React.Component<BracketProps> {
 		super(props);
 	}
 
+	// When mounting, create the matchups if they haven't been created
 	componentWillMount() {
 		if (!this.props.store.bracket.matchups.length) {
 			this.props.dispatcher.create({
@@ -35,6 +37,7 @@ class Bracket extends React.Component<BracketProps> {
 		}
 	}
 
+	// Return the bound function to execute to update the matchup winner.
 	createWinnerFunc(roundIndex: number, matchupIndex: number, playerIndex: number) {
 		return this.props.dispatcher.markWinner.bind(this, {
 			roundIndex,
@@ -43,15 +46,18 @@ class Bracket extends React.Component<BracketProps> {
 		});
 	}
 
+	// Create the elements for a single round by using the previous round matchps and the player list.
 	renderRound(round: Matchup[], lastRound: Matchup[], players: Player[], roundIndex: number, overallIndex: number): JSX.Element {
 		const matchups: JSX.Element[] = [];
 		for (let i = 0; i < round.length; i++) {
 
 			const matchup = round[i];
+			// Only show the winner buttons if there is no winner and each preceding matchup has a winner
 			const canPlay = matchup.winner === -1 && matchup.preceding.every(function (lastRoundIndex) {
 				const lastRoundMatchup = lastRound[lastRoundIndex];
 				return lastRoundMatchup.winner !== -1;
 			});
+			// Map the preceding matches to a winner if possible, otherwise track the index
 			const precedingMatchPlayers = matchup.preceding.map<BracketMatchupData>((lastRoundIndex) => {
 				const lastRoundMatchup = lastRound[lastRoundIndex];
 				return {
@@ -60,6 +66,7 @@ class Bracket extends React.Component<BracketProps> {
 					onWin: canPlay ? this.createWinnerFunc(roundIndex, i, lastRoundMatchup.winner) : null
 				}
 			});
+			// Map each first time player
 			const firstTimePlayers = matchup.players.map<BracketMatchupData>((playerIndex) => {
 				return {
 					player: players[playerIndex],

@@ -10,6 +10,7 @@ const defaultState: AppOrderState = {
 
 export function appOrderReducer(state: AppOrderState = defaultState, action: ActionTypes): AppOrderState {
 	if (action.type === actions.appOrder.move.type) {
+		// When shifting views, just update the index.
 		return {
 			order: action.payload
 		};

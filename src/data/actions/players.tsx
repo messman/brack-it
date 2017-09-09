@@ -1,5 +1,6 @@
 import { CreateAction, CreateActionProcess } from "../types";
 
+/** Represents a single competitor in the bracket. */
 export interface Player {
 	name: string,
 	reactId: number
