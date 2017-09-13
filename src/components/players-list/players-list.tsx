@@ -2,13 +2,13 @@ import * as React from "react";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
 
-import { State, actions, wrapStore, wrapDispatcher, getCompositeType } from "../../data";
+import { State, Player, actions, wrapStore, wrapDispatcher, getReturnType } from "../../data";
 import { PlayersListItem } from "../";
 
 import "./players-list.scss";
 
 interface PlayersListOwnProps {
-	onGo: () => void;
+	players: Player[]
 }
 
 interface PlayersListOwnState {
@@ -16,14 +16,11 @@ interface PlayersListOwnState {
 	newPlayerText: string
 }
 
-function mapStateToProps(state: State) {
-	return wrapStore(state.players);
-}
 function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
 	return wrapDispatcher(Redux.bindActionCreators(actions.players, dispatch));
 }
-const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
-type PlayersListProps = typeof combined & PlayersListOwnProps;
+const dispatchType = getReturnType(mapDispatchToProps);
+type PlayersListProps = typeof dispatchType & PlayersListOwnProps;
 
 class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState> {
 
@@ -84,13 +81,6 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 	}
 
 	render() {
-
-		// If we have enough players, allow us to begin
-		let goButton: JSX.Element = null;
-		if (this.props.store.length > 1) {
-			goButton = <button onClick={this.props.onGo} className="list-go-button">Start with <strong>{this.props.store.length}</strong> players</button>
-		}
-
 		return (
 			<div className="react-players-list">
 				<div>
@@ -98,7 +88,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 					<input placeholder="Type a new player name" value={this.state.newPlayerText} onChange={this.handleChange} onKeyDown={this.handleKey} />
 				</div>
 				<ul>
-					{this.props.store.map((player, index) => {
+					{this.props.players.map((player, index) => {
 						const updateName: (name: string) => void = this.updateName.bind(this, index);
 						const deletePlayer: () => void = this.props.dispatcher.delete.bind(this, index);
 						return (
@@ -106,10 +96,9 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 						)
 					})}
 				</ul>
-				{goButton}
 			</div>
 		);
 	}
 }
 
-export default ReactRedux.connect(mapStateToProps, mapDispatchToProps)(PlayersList);
+export default ReactRedux.connect(null, mapDispatchToProps)(PlayersList);

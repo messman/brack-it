@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
 import { State, AppOrder, actions, wrapStore, wrapDispatcher, getCompositeType } from "../../data";
-import { PlayersList, Bracket } from "../";
+import { Tabs, Tab, Options, PlayersList, Bracket } from "../";
 
 import "./app.scss"
 // Import the overall stylesheet
@@ -10,10 +10,16 @@ import "../../style/index.scss";
 
 // Get the combined type of our state and action types
 function mapStateToProps(state: State) {
-	return wrapStore(state.appOrder);
+	return wrapStore({
+		order: state.appOrder,
+		players: state.players
+	});
 }
 function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
-	return wrapDispatcher(Redux.bindActionCreators(actions.appOrder, dispatch));
+	return wrapDispatcher({
+		order: Redux.bindActionCreators(actions.appOrder, dispatch),
+		players: Redux.bindActionCreators(actions.players, dispatch)
+	});
 }
 const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
 type AppProps = typeof combined;
@@ -25,18 +31,32 @@ class App extends React.Component<AppProps> {
 
 	// Move to the "show" view
 	moveToBracket = () => {
-		this.props.dispatcher.move(AppOrder.show);
+		this.props.dispatcher.order.move(AppOrder.show);
 	}
 
 	render() {
 
-		const order = this.props.store.order;
+		const order = this.props.store.order.order;
 		let view: JSX.Element = null;
 		if (order === AppOrder.create) {
-			view = <PlayersList onGo={this.moveToBracket} />
+			view =
+				<Tabs>
+					<Tab title="Players" >
+						<PlayersList players={this.props.store.players} />
+					</Tab>
+					<Tab title="Options" >
+						<Options></Options>
+					</Tab>
+				</Tabs>;
 		}
 		else {
 			view = <Bracket />;
+		}
+
+		// If we have enough players, allow us to begin
+		let goButton: JSX.Element = null;
+		if (this.props.store.players.length > 1) {
+			goButton = <button onClick={this.moveToBracket.bind(this)} className="list-go-button">Start with <strong>{this.props.store.players.length}</strong> players</button>
 		}
 
 		return (
@@ -46,6 +66,7 @@ class App extends React.Component<AppProps> {
 				</header>
 				<main className="L-filled">
 					{view}
+					{goButton}
 				</main>
 			</div>
 		)

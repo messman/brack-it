@@ -84,7 +84,7 @@ export default class PlayersListItem extends React.Component<PlayersListItemProp
 
 		return (
 			<li className="list-item">
-				<span className="list-index">{index}</span>
+				<span className="list-index">{index + 1}</span>
 				{nameEl}
 				<button className="list-delete" onClick={onDelete}>X</button>
 			</li>
