@@ -45,7 +45,7 @@ class App extends React.Component<AppProps> {
 						<PlayersList players={this.props.store.players} />
 					</Tab>
 					<Tab title="Options" >
-						<Options></Options>
+						<Options players={this.props.store.players}></Options>
 					</Tab>
 				</Tabs>;
 		}
@@ -60,13 +60,17 @@ class App extends React.Component<AppProps> {
 		}
 
 		return (
-			<div className="full grid L-column">
+			<div className="full grid gL-column">
 				<header>
 					<h1>brack-it</h1>
 				</header>
-				<main className="L-filled">
-					{view}
-					{goButton}
+				<main className="gL-flexed grid grid-pad gL-column">
+					<div className="gL-flexed">
+						{view}
+					</div>
+					<div>
+						{goButton}
+					</div>
 				</main>
 			</div>
 		)

@@ -25,15 +25,15 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 			body: "matchup-body"
 		},
 		entry: {
-			base: "matchup-entry grid",
+			base: "matchup-entry grid grid-pad",
 			ui: {
 				data: {
-					base: "entry-data L-filled",
+					base: "entry-data gL-flexed",
 					player: "text-player",
 					extra: "text-extra"
 				},
 				action: {
-					base: "entry-action grid L-stretch",
+					base: "entry-action grid grid-pad gL-stretch",
 					win: "action-win"
 				}
 			},

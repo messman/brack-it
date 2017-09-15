@@ -11,75 +11,82 @@ $grid-padding: 20px;
 		}
 
 		// Main-axis (above) alignment (default: flex-start)
-		&.#{$classname}-left {
+		&.#{$classname}-main-start {
+			// ABCD--------
 			justify-content: flex-start;
 		}
-		&.#{$classname}-h-center {
+		&.#{$classname}-main-center {
+			// ----ABCD----
 			justify-content: center;
 		}
-		&.#{$classname}-right {
+		&.#{$classname}-main-end {
+			// --------ABCD
 			justify-content: flex-end;
 		}
-		&.#{$classname}-around {
+		&.#{$classname}-main-around {
+			// -A--B--C--D-
 			justify-content: space-around;
 		}
-		&.#{$classname}-between {
+		&.#{$classname}-main-between {
+			// A---B---C---D
 			justify-content: space-between;
 		}
 
 		// Cross-axis alignment (default: flex-start)
-		&.#{$classname}-top {
+		&.#{$classname}-cross-start {
 			align-items: flex-start;
 		}
-		&.#{$classname}-bottom {
-			align-items: flex-end;
-		}
-		&.#{$classname}-v-center {
+		&.#{$classname}-cross-center {
 			align-items: center;
 		}
-		&.#{$classname}-baseline {
+		&.#{$classname}-cross-end {
+			align-items: flex-end;
+		}
+		&.#{$classname}-cross-baseline {
 			align-items: baseline;
 		}
-		&.#{$classname}-stretch {
+		&.#{$classname}-cross-stretch {
 			align-items: stretch;
 		}
 
 		// Force children to each take up as much space as possible
-		&.#{$classname}-fill > * {
-			flex: 1
+		&.#{$classname}-flex-children > * {
+			flex: 1;
+			overflow: auto;
 		}
 		// Make a child take up as much space as possible
-		> *.#{$classname}-filled {
+		> *.#{$classname}-flexed {
 			flex: 1;
+			overflow: auto;
 		}
 
 		@for $index from 1 through 12 {
 			> *.#{$classname}-#{$index} {
 				flex: 0 0 percentage($index/12);
 			}
-			 > *.#{$classname}-push-#{$index} {
-				margin-left: percentage($index/12);
-			}
+			//  > *.#{$classname}-push-#{$index} {
+			// 	margin-left: percentage($index/12);
+			// }
 		}
 	}
  }
  
  .grid {
 	display: flex;
-	flex-wrap: wrap;
-	&.grid-pad {
-		padding: $grid-padding / 2;
-	}
-	&.spread > * {
-		flex: 0 0 100%;
-	}
-	> * {
+	flex-wrap: nowrap;
+	// &.grid-pad {
+	// 	padding: $grid-padding / 2;
+	// }
+	// &.spread > * {
+	// 	flex: 0 0 100%;
+	// }
+	&.grid-pad > * {
 		padding: $grid-padding / 2;
 	}
  }
  
  @each $break in $breaks {
 	@include break-min($break) {
-		@include create-grid-cols($break);
+		@include create-grid-cols("g#{$break}");
 	}
  }

@@ -1,9 +1,11 @@
 import * as React from "react";
 
+import { Player } from "../../data";
+
 import "./options.scss";
 
 interface OptionsOwnProps {
-
+	players: Player[];
 }
 
 interface OptionsOwnState {
