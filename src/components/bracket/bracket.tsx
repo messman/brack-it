@@ -3,6 +3,7 @@ import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
 
 import BracketMatchup, { BracketMatchupData } from "../bracket-matchup/bracket-matchup";
+import { Zoomable } from "../";
 
 import { State, actions, wrapStore, wrapDispatcher, getCompositeType } from "../../data";
 import { Player, Matchup, MatchupActionCreateArgs } from "../../data";
@@ -81,14 +82,14 @@ class Bracket extends React.Component<BracketProps> {
 			matchups.push(matchupElement);
 		}
 		return (
-			<div key={roundIndex}>
+			<div key={roundIndex} style={{ width: "100%" }}>
 				<h2>Round {roundIndex + 1}</h2>
 				{matchups}
 			</div>
 		);
 	}
 
-	renderBracket(): JSX.Element[] {
+	renderBracket(): JSX.Element {
 		const players = this.props.store.players;
 		const matchups = this.props.store.bracket.matchups;
 
@@ -102,7 +103,7 @@ class Bracket extends React.Component<BracketProps> {
 			overallIndex += round.length;
 			lastRound = round;
 		}
-		return elements;
+		return <div className="grid gL-flex-children" style={{ width: (elements.length * 100) + "%" }}>{elements}</div>;
 	}
 
 	render() {
@@ -110,7 +111,9 @@ class Bracket extends React.Component<BracketProps> {
 		return (
 			<div className="react-bracket">
 				<p>Here's a bracket for {this.props.store.players.length} players:</p>
-				{bracket}
+				<Zoomable min={.5} max={1.5} zoomChange={.1} >
+					{bracket}
+				</Zoomable>
 			</div>
 		);
 	}
