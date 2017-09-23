@@ -47,18 +47,5 @@ $borderColor: #ccc;
 }
 
 .entry-action .action-win {
-	font-size: 1em;
 	padding: .3em .8em;
-	$color: #f5f5f5;
-
-	border: 1px solid $borderColor;
-	background-color: $color;
-	cursor: pointer;
-
-	&:active {
-		background-color: darken($color, 20%);
-	}
-	&:hover {
-		background-color: darken($color, 10%);
-	}
 }

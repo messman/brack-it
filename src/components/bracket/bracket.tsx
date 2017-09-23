@@ -139,8 +139,10 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 
 		return (
 			<div className="react-bracket gL-flexed grid gL-column">
-				<p>Here's a bracket for {this.props.store.players.length} players.</p>
-				<button onClick={this.switchZoomable}>{zoomableMessage}</button>
+				<div>
+					<p>Here's a bracket for {this.props.store.players.length} players.</p>
+					<button onClick={this.switchZoomable}>{zoomableMessage}</button>
+				</div>
 				<div className="gL-flexed grid gL-column">
 					{zoomable || bracket}
 				</div>
