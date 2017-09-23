@@ -51,7 +51,8 @@ export class Zoomable extends React.Component<ZoomableProps, ZoomableState> {
 			return !!child;
 		});
 
-		const container = <div className="grid gL-flex-children" style={{ width: (children.length * 100) + "%" }}>{children}</div>;
+		// Holds all children.
+		const parent = <div className="grid gL-flex-children" style={{ width: (children.length * 50) + "%" }}>{children}</div>;
 
 		const zoom = this.state.zoom;
 		const style = {
@@ -60,16 +61,19 @@ export class Zoomable extends React.Component<ZoomableProps, ZoomableState> {
 			overflow: "visible" as any
 			//height: (zoom * 100) + "%",
 		};
-		const zoomable = <div className="gL-flexed" style={style}>{container}</div>;
 
 		return (
 			<div className="react-zoomable gL-flexed grid gL-column">
 				<div>
-					<button onClick={this.zoomOut}>Zoom Out</button>
-					<span>{this.state.zoom}</span>
-					<button onClick={this.zoomIn}>Zoom In</button>
+					<button onClick={this.zoomOut} disabled={zoom === this.props.min}>Out</button>
+					<span>{zoom.toFixed(1)}</span>
+					<button onClick={this.zoomIn} disabled={zoom === this.props.max}>In</button>
 				</div>
-				{zoomable}
+				<div className="gL-flexed grid gL-column">
+					<div className="gL-flexed" style={style}>
+						{parent}
+					</div>
+				</div>
 			</div>
 		);
 	}
