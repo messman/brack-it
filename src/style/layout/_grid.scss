@@ -55,13 +55,13 @@ $grid-padding: 20px;
 			overflow: auto;
 		}
 		// Make a child take up as much space as possible
-		> *.#{$classname}-flexed {
+		> .#{$classname}-flexed {
 			flex: 1;
 			overflow: auto;
 		}
 
 		@for $index from 1 through 12 {
-			> *.#{$classname}-#{$index} {
+			> .#{$classname}-#{$index} {
 				flex: 0 0 percentage($index/12);
 			}
 			//  > *.#{$classname}-push-#{$index} {

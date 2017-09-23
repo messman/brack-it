@@ -23,10 +23,18 @@ function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
 const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
 type BracketProps = typeof combined;
 
-class Bracket extends React.Component<BracketProps> {
+interface BracketState {
+	useZoomable: boolean;
+}
+
+class Bracket extends React.Component<BracketProps, BracketState> {
 
 	constructor(props: BracketProps) {
 		super(props);
+
+		this.state = {
+			useZoomable: true
+		};
 	}
 
 	// When mounting, create the matchups if they haven't been created
@@ -36,6 +44,14 @@ class Bracket extends React.Component<BracketProps> {
 				players: this.props.store.players
 			});
 		}
+	}
+
+	switchZoomable = () => {
+		this.setState((prev) => {
+			return {
+				useZoomable: !prev.useZoomable
+			}
+		});
 	}
 
 	// Return the bound function to execute to update the matchup winner.
@@ -89,7 +105,7 @@ class Bracket extends React.Component<BracketProps> {
 		);
 	}
 
-	renderBracket(): JSX.Element {
+	renderBracket(): JSX.Element[] {
 		const players = this.props.store.players;
 		const matchups = this.props.store.bracket.matchups;
 
@@ -103,17 +119,31 @@ class Bracket extends React.Component<BracketProps> {
 			overallIndex += round.length;
 			lastRound = round;
 		}
-		return <div className="grid gL-flex-children" style={{ width: (elements.length * 100) + "%" }}>{elements}</div>;
+		return elements;
 	}
 
 	render() {
 		const bracket = this.renderBracket();
+
+		const useZoomable = this.state.useZoomable;
+		let zoomable: JSX.Element = null;
+		let zoomableMessage = useZoomable ? "Switch to Vertical" : "Switch to Horizontal"
+		if (useZoomable) {
+			zoomable =
+				(
+					<Zoomable min={.5} max={1.5} zoomChange={.1}>
+						{bracket}
+					</Zoomable>
+				)
+		}
+
 		return (
-			<div className="react-bracket">
-				<p>Here's a bracket for {this.props.store.players.length} players:</p>
-				<Zoomable min={.5} max={1.5} zoomChange={.1} >
-					{bracket}
-				</Zoomable>
+			<div className="react-bracket gL-flexed grid gL-column">
+				<p>Here's a bracket for {this.props.store.players.length} players.</p>
+				<button onClick={this.switchZoomable}>{zoomableMessage}</button>
+				<div className="gL-flexed grid gL-column">
+					{zoomable || bracket}
+				</div>
 			</div>
 		);
 	}

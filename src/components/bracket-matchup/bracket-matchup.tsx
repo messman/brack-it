@@ -25,7 +25,7 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 			body: "matchup-body"
 		},
 		entry: {
-			base: "matchup-entry grid grid-pad",
+			base: "matchup-entry grid",
 			ui: {
 				data: {
 					base: "entry-data gL-flexed",
@@ -33,7 +33,7 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 					extra: "text-extra"
 				},
 				action: {
-					base: "entry-action grid grid-pad gL-stretch",
+					base: "entry-action grid gL-stretch",
 					win: "action-win"
 				}
 			},

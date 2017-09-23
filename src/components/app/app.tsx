@@ -38,39 +38,35 @@ class App extends React.Component<AppProps> {
 
 		const order = this.props.store.order.order;
 		let view: JSX.Element = null;
+		let goButton: JSX.Element = null;
 		if (order === AppOrder.create) {
+			// If we have enough players, allow us to begin
+			if (this.props.store.players.length > 1) {
+				goButton = <div><button onClick={this.moveToBracket.bind(this)} className="list-go-button">Start with <strong>{this.props.store.players.length}</strong> players</button></div>
+			}
 			view =
-				<Tabs>
-					<Tab title="Players" >
-						<PlayersList players={this.props.store.players} />
-					</Tab>
-					<Tab title="Options" >
-						<Options players={this.props.store.players}></Options>
-					</Tab>
-				</Tabs>;
+				<div className="gL-flexed">
+					<Tabs>
+						<Tab title="Players" >
+							<PlayersList players={this.props.store.players} />
+						</Tab>
+						<Tab title="Options" >
+							<Options players={this.props.store.players}></Options>
+						</Tab>
+					</Tabs>
+				</div>;
 		}
 		else {
 			view = <Bracket />;
 		}
-
-		// If we have enough players, allow us to begin
-		let goButton: JSX.Element = null;
-		if (this.props.store.players.length > 1) {
-			goButton = <button onClick={this.moveToBracket.bind(this)} className="list-go-button">Start with <strong>{this.props.store.players.length}</strong> players</button>
-		}
-
 		return (
 			<div className="full grid gL-column">
 				<header>
 					<h1>brack-it</h1>
 				</header>
 				<main className="gL-flexed grid grid-pad gL-column">
-					<div className="gL-flexed">
-						{view}
-					</div>
-					<div>
-						{goButton}
-					</div>
+					{view}
+					{goButton}
 				</main>
 			</div>
 		)
