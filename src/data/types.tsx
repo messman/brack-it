@@ -54,3 +54,21 @@ export function wrapStore<T>(arg: T) {
 		store: arg
 	}
 }
+
+export enum Flags {
+	none = 0,
+	highlight = 1,
+}
+
+export const FlagUtils = {
+	has: function has(value: Flags, flags: Flags): boolean {
+		return (value & flags) === flags;
+	},
+	toggle: function toggle(value: Flags, flags: Flags, onOff?: boolean): Flags {
+		if (onOff === undefined)
+			return value & flags; // Toggle
+		if (onOff)
+			return value | flags; // On
+		return value & ~flags; // Off
+	},
+}

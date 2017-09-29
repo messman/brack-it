@@ -13,6 +13,15 @@ $borderColor: #ccc;
 		padding: .5em;
 		border-bottom: 1px solid $borderColor;
 	}
+
+	&.matchup-completed {
+		opacity: .7;
+	}
+
+}
+
+.matchup-highlighted .matchup-header {
+	background-color: red;
 }
 
 .matchup-entry {
@@ -23,8 +32,10 @@ $borderColor: #ccc;
 		border-bottom: 0;
 	}
 	
-	&.matchup-winner .text-player {
-		font-weight: bold;
+	&.matchup-winner {
+		.text-player {
+			font-weight: bold;
+		}
 	}
 	
 	.text-player {

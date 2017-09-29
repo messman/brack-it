@@ -40,18 +40,19 @@ class App extends React.Component<AppProps> {
 		let view: JSX.Element = null;
 		let goButton: JSX.Element = null;
 		if (order === AppOrder.create) {
+			const players = this.props.store.players.players;
 			// If we have enough players, allow us to begin
-			if (this.props.store.players.length > 1) {
-				goButton = <div><button onClick={this.moveToBracket.bind(this)} className="list-go-button">Start with <strong>{this.props.store.players.length}</strong> players</button></div>
+			if (players.length > 1) {
+				goButton = <div><button onClick={this.moveToBracket.bind(this)} className="list-go-button">Start with <strong>{players.length}</strong> players</button></div>
 			}
 			view =
 				<div className="gL-flexed">
 					<Tabs>
-						<Tab title="Players" >
-							<PlayersList players={this.props.store.players} />
+						<Tab title="Players">
+							<PlayersList players={players} />
 						</Tab>
-						<Tab title="Options" >
-							<Options players={this.props.store.players}></Options>
+						<Tab title="Options">
+							<Options players={players}></Options>
 						</Tab>
 					</Tabs>
 				</div>;

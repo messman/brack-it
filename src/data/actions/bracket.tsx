@@ -1,10 +1,16 @@
 import { CreateAction, CreateActionProcess } from "../types";
-import { Player } from "../";
+import { Player, Flags } from "../";
 import { BracketCreator, BracketCreationOptions } from "../../services/bracket-maker";
 
 /** Represents an entire bracket. */
 export interface Bracket {
-	matchups: Matchup[][]
+	matchups: Matchup[][],
+}
+
+/** The coordinates of a matchup. */
+export interface MatchupLocation {
+	roundIndex: number,
+	matchupIndex: number
 }
 
 /** Represents a single matchup of players, potentially preceded by other matchups. */
@@ -15,6 +21,10 @@ export interface Matchup {
 	preceding: number[],
 	/** The index of the winner player (or -1). */
 	winner: number,
+	/** The matchup to follow this one. */
+	proceding: number,
+	/** Any flags applied to the matchup. */
+	flags: Flags,
 	/** A unique ID. */
 	reactId: number
 }
@@ -41,7 +51,14 @@ const createBracket = function (args: MatchupActionCreateArgs): Bracket {
 	return BracketCreator.createPlayersBracket(args.players, args.options);
 }
 
+/** Used to mark a player or matchup with flags. */
+export interface UpdateBracketFlagsArgs {
+	locations: MatchupLocation[]
+	flags: Flags
+}
+
 export default {
 	create: CreateActionProcess<"BRACKET_CREATE", Bracket, MatchupActionCreateArgs>("BRACKET_CREATE", createBracket),
-	markWinner: CreateAction<"BRACKET_MARK_WINNER", MatchupActionMarkArgs>("BRACKET_MARK_WINNER")
+	markWinner: CreateAction<"BRACKET_MARK_WINNER", MatchupActionMarkArgs>("BRACKET_MARK_WINNER"),
+	updateFlags: CreateAction<"BRACKET_UPDATE_FLAGS", UpdateBracketFlagsArgs>("BRACKET_UPDATE_FLAGS")
 }

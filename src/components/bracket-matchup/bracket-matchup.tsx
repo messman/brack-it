@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Player, Matchup } from "../../data";
+import { Player, Matchup, Flags, FlagUtils } from "../../data";
 
 import "./bracket-matchup.scss";
 
@@ -14,15 +14,21 @@ interface BracketMatchupOwnProps {
 	roundIndex: number,
 	overallIndex: number,
 	winner: Player,
-	data: BracketMatchupData[]
+	matchup: Matchup,
+	data: BracketMatchupData[],
+	onHighlight: () => void
 }
 
 export default class BracketMatchup extends React.Component<BracketMatchupOwnProps> {
 
 	static classes = {
+		state: {
+			completed: "matchup-completed",
+			highlighted: "matchup-highlighted"
+		},
 		ui: {
 			header: "matchup-header",
-			body: "matchup-body"
+			body: "matchup-body",
 		},
 		entry: {
 			base: "matchup-entry grid",
@@ -42,6 +48,9 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 				regular: "matchup-player-regular",
 				opener: "matchup-player-opener",
 				tbd: "matchup-player-tbd",
+				highlighted: "matchup-player-highlighted",
+				eliminatedFuture: "matchup-player-eliminated-future",
+				eliminatedNow: "matchup-player-eliminated-now"
 			}
 		}
 	};
@@ -51,11 +60,18 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 	}
 
 	render() {
-		const { overallIndex, winner, data } = this.props;
+		const { overallIndex, winner, data, matchup } = this.props;
+
+		const classes = BracketMatchup.classes;
+		const topClasses = ["react-bracket-matchup"];
+
+		if (FlagUtils.has(matchup.flags, Flags.highlight))
+			topClasses.push(classes.state.highlighted);
 
 		// Re-arrange the list so the winner is always at the top.
 		const winnerReactId = winner ? winner.reactId : -1;
 		if (winnerReactId !== -1) {
+			topClasses.push(classes.state.completed);
 			for (var i = 1; i < data.length; i++) {
 				const entry = data[i];
 				if (entry.player && entry.player.reactId === winnerReactId) {
@@ -67,7 +83,6 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 			}
 		}
 
-		const classes = BracketMatchup.classes;
 		// Map each player to an entry element
 		const matchPlayers = data.map<JSX.Element>((entry: BracketMatchupData, index) => {
 			const entryClasses = [classes.entry.base];
@@ -79,6 +94,9 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 			let extraText: string = null;
 			// Get the appropriate text based on the state
 			if (entry.player) {
+				if (FlagUtils.has(entry.player.flags, Flags.highlight))
+					entryClasses.push(classes.entry.state.highlighted);
+
 				playerText = entry.player.name;
 				if (entry.precedingMatchIndex !== -1) {
 					entryClasses.push(classes.entry.state.regular);
@@ -107,13 +125,13 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 						<span className={classes.entry.ui.data.extra}>{extraText}</span>
 					</div>
 					{winnerButton}
-				</div >
+				</div>
 			);
 		});
 
 		return (
-			<div className="react-bracket-matchup">
-				<div className={classes.ui.header}>
+			<div className={topClasses.join(" ")}>
+				<div className={classes.ui.header} onClick={this.props.onHighlight}>
 					<span>Match {overallIndex + 1}</span>
 				</div>
 				<div className={classes.ui.body}>

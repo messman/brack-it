@@ -1,4 +1,4 @@
-import { Player, Matchup, Bracket } from "../data";
+import { Player, Matchup, Bracket, Flags } from "../data";
 
 /** A function used to sort the array of players. */
 export interface BracketSelectionSorter {
@@ -84,7 +84,7 @@ export class BracketCreator {
 
 		if (length == n * grouping) {
 			// Easiest case. E.g., n=8 and 2 players face off, and we have 16 teams - so each of the 16 can play to 8, then 4, then 2, then 1.
-			tree = BracketCreator.createMatchupTree(inputs, true, grouping);
+			tree = BracketCreator.createMatchupTree(inputs, true, grouping, players, null);
 		}
 		else {
 			// In most cases, it won't be as pretty. To deal, create a play-in round to deal with the extra players.
@@ -102,10 +102,10 @@ export class BracketCreator {
 				additional.push(inputs.pop());
 			}
 			// Create just the play-in round.
-			const additionalTree = BracketCreator.createMatchups(additional, additionalGrouping);
-			overall.push(additionalTree);
+			const additionalRound = BracketCreator.createMatchups(additional, additionalGrouping, players, null);
+			overall.push(additionalRound);
 			// Now that those players have a matchup, use the matchup instead of their original "player" for reference.
-			let additionalInputs = additionalTree.map<Input>(function (matchup, index) {
+			let additionalInputs = additionalRound.map<Input>(function (matchup, index) {
 				return {
 					matchup: index,
 					player: -1
@@ -113,25 +113,25 @@ export class BracketCreator {
 			});
 
 			// Create the overall perfect bracket now.
-			tree = BracketCreator.createMatchupTree([...additionalInputs, ...inputs], true, grouping);
+			tree = BracketCreator.createMatchupTree([...additionalInputs, ...inputs], true, grouping, players, additionalRound);
 		}
 
 		for (let i = 0; i < tree.length; i++)
 			overall.push(tree[i]);
 
 		return {
-			matchups: overall
+			matchups: overall,
 		};
 	}
 
 	// Inputs.length should be a perfect nth of the grouping.
 	/** Creates a perfect bracket (optionally as a tree) from the given inputs. */
-	private static createMatchupTree(inputs: Input[], recursive: boolean, grouping: number): Matchup[][] {
+	private static createMatchupTree(inputs: Input[], recursive: boolean, grouping: number, allPlayers: Player[], previousRound: Matchup[]): Matchup[][] {
 		if (inputs.length === 1)
 			return [];
 
 		const overall: Matchup[][] = [];
-		let newRound: Matchup[] = this.createMatchups(inputs, grouping);
+		let newRound: Matchup[] = this.createMatchups(inputs, grouping, allPlayers, previousRound);
 		overall.push(newRound);
 		if (recursive) {
 			const roundInputs = newRound.map<Input>(function (matchup, index) {
@@ -140,7 +140,7 @@ export class BracketCreator {
 					player: null
 				}
 			})
-			const recur = BracketCreator.createMatchupTree(roundInputs, recursive, grouping);
+			const recur = BracketCreator.createMatchupTree(roundInputs, recursive, grouping, allPlayers, newRound);
 			for (let i = 0; i < recur.length; i++)
 				overall.push(recur[i]);
 		}
@@ -148,28 +148,40 @@ export class BracketCreator {
 	}
 
 	/** Creates a single round of matchups from the players. Expects no extras. */
-	private static createMatchups(inputs: Input[], grouping: number): Matchup[] {
+	private static createMatchups(inputs: Input[], grouping: number, allPlayers: Player[], previousRound: Matchup[]): Matchup[] {
 		if (inputs.length === 1)
 			return [];
 
 		let round: Matchup[] = [];
+		let matchupIndex = 0;
 		for (let i = 0; i < inputs.length; i += grouping) {
 			let matchups: number[] = [];
 			let players: number[] = [];
 			for (let j = i; j < i + grouping; j++) {
 				const input = inputs[j];
-				if (input.matchup > -1)
+				if (input.matchup > -1) {
+					// Mark the proceding matchup for the previous round
+					const matchup = previousRound[input.matchup];
+					matchup.proceding = matchupIndex;
+					// Add to our preceding list
 					matchups.push(input.matchup);
-				else if (input.player > -1)
+				}
+				else if (input.player > -1) {
 					players.push(input.player);
+					const player = allPlayers[input.player];
+					player.matchup = matchupIndex;
+				}
 			}
 
 			round.push({
 				preceding: matchups,
 				players,
 				winner: -1,
+				proceding: null,
+				flags: Flags.none,
 				reactId: matchupId++
 			});
+			matchupIndex++;
 		}
 		return round;
 	}
