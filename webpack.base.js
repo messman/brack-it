@@ -17,6 +17,10 @@ const htmlPluginOptions = {
 	}
 };
 
+/*
+	Note, when using DefinePlugin, webpack will parse the JS, not do a simple find-and-replace.
+	so "webpack" should not be a variable, but instead just a TS interface or "declare let" or similar.
+*/
 const DEFINE = {
 	webpack: {
 		BUILD: {
