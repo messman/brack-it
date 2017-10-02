@@ -19,6 +19,9 @@ const totalHTMLPluginOptions = merge(base.html,
 		title: "Brack-It"
 	});
 
+const DEFINE = base.DEFINE;
+DEFINE.webpack.BUILD.IS_PRODUCTION = JSON.stringify(true);
+
 module.exports = merge(base.base, {
 
 	// Enable sourcemaps for debugging webpack's output. Increases build time - faster options are available.
@@ -41,11 +44,7 @@ module.exports = merge(base.base, {
 	},
 
 	plugins: [
-		new webpack.DefinePlugin({
-			'process.env': {
-				'NODE_ENV': JSON.stringify('production')
-			}
-		}),
+		new webpack.DefinePlugin(DEFINE),
 		new webpack.optimize.UglifyJsPlugin({
 			sourceMap: true
 		}),

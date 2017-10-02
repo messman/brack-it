@@ -17,6 +17,15 @@ const htmlPluginOptions = {
 	}
 };
 
+const DEFINE = {
+	webpack: {
+		BUILD: {
+			IS_PRODUCTION: JSON.stringify(false),
+			TIME: JSON.stringify(buildTime)
+		}
+	}
+}
+
 const baseWebpackOptions = {
 	entry: {
 		index: "./src/entries/index.tsx",
@@ -70,5 +79,6 @@ const baseWebpackOptions = {
 
 module.exports = {
 	html: htmlPluginOptions,
-	base: baseWebpackOptions
+	base: baseWebpackOptions,
+	DEFINE
 };

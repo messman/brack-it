@@ -37,6 +37,8 @@ module.exports = merge(base.base, {
 	},
 
 	plugins: [
+		// Set our flags / DEFINEs
+		new webpack.DefinePlugin(base.DEFINE),
 		// Change the module id (unique identifier) to go by path instead of number, so hash names change less often.
 		new webpack.NamedModulesPlugin(),
 		// Generate the HTML for us
