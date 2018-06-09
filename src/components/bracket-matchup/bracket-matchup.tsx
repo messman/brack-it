@@ -5,8 +5,11 @@ import { Player, Matchup, Flags, FlagUtils } from "../../data";
 import "./bracket-matchup.scss";
 
 export interface BracketMatchupData {
+	playerIndex: number
 	player: Player,
-	precedingMatchIndex: number
+	precedingMatchup: Matchup,
+	precedingMatchupIndexInRound: number
+	precedingMatchupIndexOverall: number
 	onWin: () => void;
 }
 
@@ -98,18 +101,18 @@ export default class BracketMatchup extends React.Component<BracketMatchupOwnPro
 					entryClasses.push(classes.entry.state.highlighted);
 
 				playerText = entry.player.name;
-				if (entry.precedingMatchIndex !== -1) {
+				if (entry.precedingMatchupIndexOverall !== -1) {
 					entryClasses.push(classes.entry.state.regular);
-					extraText = "from match " + (entry.precedingMatchIndex + 1)
+					extraText = "from match " + (entry.precedingMatchupIndexOverall + 1)
 				}
 				else {
 					entryClasses.push(classes.entry.state.opener);
 					extraText = "opening match";
 				}
 			}
-			else if (entry.precedingMatchIndex !== -1) {
+			else if (entry.precedingMatchupIndexOverall !== -1) {
 				entryClasses.push(classes.entry.state.tbd);
-				playerText = "Winner of match " + (entry.precedingMatchIndex + 1);
+				playerText = "Winner of match " + (entry.precedingMatchupIndexOverall + 1);
 			}
 
 			const className = entryClasses.join(" ");

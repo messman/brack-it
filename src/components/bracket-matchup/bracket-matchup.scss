@@ -21,7 +21,7 @@ $borderColor: #ccc;
 }
 
 .matchup-highlighted .matchup-header {
-	background-color: red;
+	color: blue;
 }
 
 .matchup-entry {
@@ -54,6 +54,19 @@ $borderColor: #ccc;
 
 	.entry-data, .entry-action {
 		padding: .5em;
+	}
+
+	&:nth-child(1).matchup-player-highlighted {
+		color: red;
+	}
+	&:nth-child(2).matchup-player-highlighted {
+		color: orange;
+	}
+	&:nth-child(3).matchup-player-highlighted {
+		color: gold;
+	}
+	&:nth-child(4).matchup-player-highlighted {
+		color: green;
 	}
 }
 

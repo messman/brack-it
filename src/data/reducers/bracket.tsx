@@ -30,7 +30,7 @@ export function bracketReducer(state: BracketState = defaultState, action: Actio
 		return action.payload;
 	}
 	else if (action.type === actions.bracket.markWinner.type) {
-		// When marking a winner, just update the winner index for that matchup.
+		// When marking a winner, update the winner index for that matchup.
 		const matchupRound = state.matchups[action.payload.roundIndex];
 		const matchup = matchupRound[action.payload.matchupIndex];
 		matchup.winner = action.payload.playerIndex;

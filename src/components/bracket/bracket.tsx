@@ -73,15 +73,34 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 	}
 
 	// Return the bound function to execute to update the matchup winner.
-	createHighlightFunc(locations: MatchupLocation[], players: number[]) {
+	createHighlightFunc(roundIndex: number, data: BracketMatchupData[]) {
+		const flags = Flags.highlight;
+
+		const locations = data.map(function (matchupData) {
+			// Check if the location should be highlighted
+			if (matchupData.playerIndex !== -1)
+				return null;
+			return {
+				roundIndex: roundIndex - 1, // previous round
+				matchupIndex: matchupData.precedingMatchupIndexInRound
+			}
+		}).filter(function (a) { return !!a });
+
+		const players = data.map(function (matchupData) {
+			// Check if the player should be highlighted
+			if (matchupData.playerIndex === -1)
+				return null;
+			return matchupData.playerIndex;
+		}).filter(function (a) { return !!a });
+
 		return () => {
 			this.props.dispatcher.bracket.updateFlags({
 				locations,
-				flags: Flags.highlight
+				flags
 			});
 			this.props.dispatcher.players.updateFlags({
 				players,
-				flags: Flags.highlight
+				flags
 			});
 		};
 	}
@@ -94,42 +113,46 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 	renderRound(round: Matchup[], lastRound: Matchup[], playerManifest: PlayerManifest, roundIndex: number, overallIndex: number): JSX.Element {
 		const matchups: JSX.Element[] = [];
 		for (let i = 0; i < round.length; i++) {
-
+			const realOverallIndex = overallIndex + i;
 			const matchup = round[i];
+
 			// Only show the winner buttons if there is no winner and each preceding matchup has a winner
-			const canPlay = matchup.winner === -1 && matchup.preceding.every(function (lastRoundMatchupIndex) {
+			const createWinnerButtons = matchup.winner === -1 && matchup.preceding.every(function (lastRoundMatchupIndex) {
 				const lastRoundMatchup = lastRound[lastRoundMatchupIndex];
 				return lastRoundMatchup.winner !== -1;
 			});
+
 			// Map the preceding matches to a winner if possible, otherwise track the index
-			const precedingMatchPlayers = matchup.preceding.map<BracketMatchupData>((lastRoundMatchupIndex) => {
-				const lastRoundMatchup = lastRound[lastRoundMatchupIndex];
+			const precedingMatchPlayers = matchup.preceding.map<BracketMatchupData>((precedingMatchupIndexInRound) => {
+				const precedingMatchup = lastRound[precedingMatchupIndexInRound];
+				const precedingMatchupWinnerIndex = precedingMatchup.winner;
 				return {
-					player: lastRoundMatchup.winner !== -1 ? playerManifest.players[lastRoundMatchup.winner] : null,
-					precedingMatchIndex: ((overallIndex - lastRound.length) + lastRoundMatchupIndex),
-					onWin: canPlay ? this.createWinnerFunc(roundIndex, i, lastRoundMatchup.winner, matchup.proceding) : null
+					playerIndex: precedingMatchupWinnerIndex,
+					player: precedingMatchupWinnerIndex !== -1 ? playerManifest.players[precedingMatchupWinnerIndex] : null,
+					precedingMatchup,
+					precedingMatchupIndexInRound,
+					precedingMatchupIndexOverall: ((overallIndex - lastRound.length) + precedingMatchupIndexInRound),
+					onWin: createWinnerButtons ? this.createWinnerFunc(roundIndex, i, precedingMatchup.winner, matchup.proceding) : null
 				}
 			});
 			// Map each first time player
 			const firstTimePlayers = matchup.players.map<BracketMatchupData>((playerIndex) => {
 				return {
+					playerIndex,
 					player: playerManifest.players[playerIndex],
-					precedingMatchIndex: -1,
-					onWin: canPlay ? this.createWinnerFunc(roundIndex, i, playerIndex, matchup.proceding) : null
+					precedingMatchup: null,
+					precedingMatchupIndexInRound: -1,
+					precedingMatchupIndexOverall: -1,
+					onWin: createWinnerButtons ? this.createWinnerFunc(roundIndex, i, playerIndex, matchup.proceding) : null
 				}
 			});
 
-			const precedingLocations = matchup.preceding.map<MatchupLocation>(function (lastRoundMatchupIndex) {
-				return {
-					roundIndex: roundIndex - 1,
-					matchupIndex: lastRoundMatchupIndex
-				};
-			})
-			const onHighlight = this.createHighlightFunc(precedingLocations, matchup.players);
-
 			const data: BracketMatchupData[] = [...firstTimePlayers, ...precedingMatchPlayers];
+			console.log(realOverallIndex, data);
+			const onHighlight = this.createHighlightFunc(roundIndex, data);
+
 			const winner = matchup.winner !== -1 ? playerManifest.players[matchup.winner] : null;
-			const matchupElement: JSX.Element = <BracketMatchup key={matchup.reactId} roundIndex={roundIndex} overallIndex={overallIndex + i} matchup={matchup} winner={winner} data={data} onHighlight={onHighlight} />;
+			const matchupElement: JSX.Element = <BracketMatchup key={matchup.reactId} roundIndex={roundIndex} overallIndex={realOverallIndex} matchup={matchup} winner={winner} data={data} onHighlight={onHighlight} />;
 			matchups.push(matchupElement);
 		}
 		return (
