@@ -7,9 +7,9 @@ import playerActions from "./players";
 export * from "./players";
 
 // Combine all the action types into one easy-to-reference type.
-type BracketActionsType = typeof bracketActions[keyof typeof bracketActions];
-type OrderActionsType = typeof orderActions[keyof typeof orderActions];
-type PlayerActionsType = typeof playerActions[keyof typeof playerActions];
+type BracketActionsType = ReturnType<typeof bracketActions[keyof typeof bracketActions]>;
+type OrderActionsType = ReturnType<typeof orderActions[keyof typeof orderActions]>;
+type PlayerActionsType = ReturnType<typeof playerActions[keyof typeof playerActions]>;
 
 /** All the action types for the application. */
 export type ActionTypes = BracketActionsType | OrderActionsType | PlayerActionsType;

@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
-import { State, AppOrder, actions, wrapStore, wrapDispatcher, getCompositeType } from "../../data";
+import { State, AppOrder, actions } from "../../data";
 import { Tabs, Tab, Options, PlayersList, Bracket } from "../";
 
 import "./app.scss"
@@ -10,19 +10,25 @@ import "../../style/index.scss";
 
 // Get the combined type of our state and action types
 function mapStateToProps(state: State) {
-	return wrapStore({
+	return {
 		order: state.appOrder,
 		players: state.players
-	});
+	};
 }
-function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
-	return wrapDispatcher({
+function mapDispatchToProps(dispatch: ReactRedux.Dispatch) {
+	return {
 		order: Redux.bindActionCreators(actions.appOrder, dispatch),
 		players: Redux.bindActionCreators(actions.players, dispatch)
-	});
+	};
 }
-const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
-type AppProps = typeof combined;
+function mergeProps(stateProps: ReturnType<typeof mapStateToProps>, dispatchProps: ReturnType<typeof mapDispatchToProps>, ownProps: {}) {
+	return {
+		state: stateProps,
+		dispatch: dispatchProps,
+		...ownProps
+	};
+}
+type AppProps = ReturnType<typeof mergeProps>;
 
 class App extends React.Component<AppProps> {
 	constructor(props: AppProps) {
@@ -31,16 +37,16 @@ class App extends React.Component<AppProps> {
 
 	// Move to the "show" view
 	moveToBracket = () => {
-		this.props.dispatcher.order.move(AppOrder.show);
+		this.props.dispatch.order.move(AppOrder.show);
 	}
 
 	render() {
 
-		const order = this.props.store.order.order;
+		const order = this.props.state.order.order;
 		let view: JSX.Element = null;
 		let goButton: JSX.Element = null;
 		if (order === AppOrder.create) {
-			const players = this.props.store.players.players;
+			const players = this.props.state.players.players;
 			// If we have enough players, allow us to begin
 			if (players.length > 1) {
 				goButton = <div><button onClick={this.moveToBracket.bind(this)} className="list-go-button">Start with <strong>{players.length}</strong> players</button></div>
@@ -74,4 +80,4 @@ class App extends React.Component<AppProps> {
 	}
 }
 
-export default ReactRedux.connect(mapStateToProps, mapDispatchToProps)(App)
+export default ReactRedux.connect(mapStateToProps, mapDispatchToProps, mergeProps)(App);

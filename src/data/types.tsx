@@ -1,58 +1,29 @@
+import * as Redux from "redux";
+import * as ReactRedux from "react-redux";
+
 /** Represents an action with a type and a payload, meant to be consumed by a reducer. */
-type Action<T, P> = {
-	type: T;
-	payload: P;
-	(payload: P): Action<T, P>
+interface Action<Type, Payload> extends Redux.Action<Type> {
+	type: Type;
+	payload: Payload;
 }
 
 /** Represents an action that takes a separate input and returns a regular Action. */
-type ActionProcess<T, P, M> = {
-	type: T;
-	payload: P;
-	(input: M): Action<T, P>
+interface ActionFactory<Type, Payload, Input> extends Redux.ActionCreator<Action<Type, Payload>> {
+	(input: Input): Action<Type, Payload>;
+	type: Type,
 }
 
-/** Creates an action of the given type that receives and returns a payload. */
-export function CreateAction<T, P>(type: T): Action<T, P> {
-	const f: any = function (payload: P) { return { type, payload } };
+/** Creates an action that may take a special input that does not match its payload. */
+export function defineActionFactory<Type, Payload>(type: Type): ActionFactory<Type, Payload, Payload>;
+export function defineActionFactory<Type, Payload, Input>(type: Type, processor?: (input: Input) => Payload): ActionFactory<Type, Payload, Input>;
+export function defineActionFactory<Type, Payload, Input>(type: Type, processor?: (input: Input) => Payload): ActionFactory<Type, Payload, Input> {
+	var f: any;
+	if (processor !== undefined)
+		f = (function (input: Input) { return { type, payload: processor(input) } } as ActionFactory<Type, Payload, Input>);
+	else
+		f = (function (payload: Payload) { return { type, payload } } as ActionFactory<Type, Payload, Payload>)
 	f.type = type;
-	const g: Action<T, P> = f;
-	return g;
-}
-
-/** Creates an action that takes a special input that does not match its payload. */
-export function CreateActionProcess<T, P, M>(type: T, processor: (input: M) => P): ActionProcess<T, P, M> {
-	const f: any = function (input: M) { return { type, payload: processor(input) } };
-	f.type = type;
-	const g: ActionProcess<T, P, M> = f;
-	return g;
-}
-
-/** Gets the return type of a function without exectuting it. */
-export function getReturnType<RT>(expression: (...params: any[]) => RT): RT {
-	return {} as RT;
-}
-
-/** Gets the combination of the state and dispatcher return types without executing either function. */
-export function getCompositeType<A, B, C>(mapState: (...args: any[]) => A, mapDispatch: (...args: any[]) => B, props?: C) {
-	const a = getReturnType(mapState);
-	const b = getReturnType(mapDispatch);
-	type composite = typeof a & typeof b & typeof props;
-	return {} as composite;
-}
-
-/** Wraps the dispatcher methods with a namespace. */
-export function wrapDispatcher<T>(arg: T) {
-	return {
-		dispatcher: arg
-	}
-}
-
-/** Wraps the store state with a namespace. */
-export function wrapStore<T>(arg: T) {
-	return {
-		store: arg
-	}
+	return f;
 }
 
 export enum Flags {

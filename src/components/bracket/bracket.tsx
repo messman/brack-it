@@ -5,26 +5,32 @@ import * as ReactRedux from "react-redux";
 import BracketMatchup, { BracketMatchupData } from "../bracket-matchup/bracket-matchup";
 import { Zoomable } from "../";
 
-import { State, actions, wrapStore, wrapDispatcher, getCompositeType } from "../../data";
+import { State, actions } from "../../data";
 import { Player, PlayerManifest, Matchup, MatchupActionCreateArgs, MatchupLocation, Flags } from "../../data";
 
 import "./bracket.scss";
 
 // Get the combined type of our state and actions
 function mapStateToProps(state: State) {
-	return wrapStore({
+	return {
 		players: state.players,
 		bracket: state.bracket
-	});
+	};
 }
-function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
-	return wrapDispatcher({
+function mapDispatchToProps(dispatch: ReactRedux.Dispatch) {
+	return {
 		players: Redux.bindActionCreators(actions.players, dispatch),
 		bracket: Redux.bindActionCreators(actions.bracket, dispatch)
-	});
+	};
 }
-const combined = getCompositeType(mapStateToProps, mapDispatchToProps);
-type BracketProps = typeof combined;
+function mergeProps(stateProps: ReturnType<typeof mapStateToProps>, dispatchProps: ReturnType<typeof mapDispatchToProps>, ownProps: {}) {
+	return {
+		state: stateProps,
+		dispatch: dispatchProps,
+		...ownProps
+	}
+}
+type BracketProps = ReturnType<typeof mergeProps>;
 
 interface BracketState {
 	useZoomable: boolean;
@@ -42,9 +48,9 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 
 	// When mounting, create the matchups if they haven't been created
 	componentWillMount() {
-		if (!this.props.store.bracket.matchups.length) {
-			this.props.dispatcher.bracket.create({
-				players: this.props.store.players.players
+		if (!this.props.state.bracket.matchups.length) {
+			this.props.dispatch.bracket.create({
+				players: this.props.state.players.players
 			});
 		}
 	}
@@ -60,12 +66,12 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 	// Return the bound function to execute to update the matchup winner.
 	createWinnerFunc(roundIndex: number, matchupIndex: number, winner: number, nextMatchup: number) {
 		return () => {
-			this.props.dispatcher.bracket.markWinner({
+			this.props.dispatch.bracket.markWinner({
 				roundIndex,
 				matchupIndex,
 				playerIndex: winner
 			});
-			this.props.dispatcher.players.updateMatch({
+			this.props.dispatch.players.updateMatch({
 				player: winner,
 				nextMatchup
 			});
@@ -94,11 +100,11 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 		}).filter(function (a) { return !!a });
 
 		return () => {
-			this.props.dispatcher.bracket.updateFlags({
+			this.props.dispatch.bracket.updateFlags({
 				locations,
 				flags
 			});
-			this.props.dispatcher.players.updateFlags({
+			this.props.dispatch.players.updateFlags({
 				players,
 				flags
 			});
@@ -106,7 +112,7 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 	}
 
 	updateMarked(players: number[]): void {
-		this.props.dispatcher.players.updateMatch
+		this.props.dispatch.players.updateMatch
 	}
 
 	// Create the elements for a single round by using the previous round matchps and the player list.
@@ -164,8 +170,8 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 	}
 
 	renderBracket(): JSX.Element[] {
-		const playersState = this.props.store.players;
-		const matchups = this.props.store.bracket.matchups;
+		const playersState = this.props.state.players;
+		const matchups = this.props.state.bracket.matchups;
 
 		let overallIndex = 0;
 		let lastRound: Matchup[] = null;
@@ -198,7 +204,7 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 		return (
 			<div className="react-bracket gL-flexed grid gL-column">
 				<div>
-					<p>Here's a bracket for {this.props.store.players.players.length} players.</p>
+					<p>Here's a bracket for {this.props.state.players.players.length} players.</p>
 					<button onClick={this.switchZoomable}>{zoomableMessage}</button>
 				</div>
 				<div className="gL-flexed grid gL-column">
@@ -209,4 +215,4 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 	}
 }
 
-export default ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Bracket);
+export default ReactRedux.connect(mapStateToProps, mapDispatchToProps, mergeProps)(Bracket);

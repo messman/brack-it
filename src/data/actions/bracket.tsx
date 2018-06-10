@@ -1,4 +1,4 @@
-import { CreateAction, CreateActionProcess } from "../types";
+import { defineActionFactory } from "../types";
 import { Player, Flags } from "../";
 import { BracketCreator, BracketCreationOptions } from "../../services/bracket-maker";
 
@@ -47,18 +47,17 @@ export interface MatchupActionMarkArgs {
 	playerIndex: number
 }
 
-const createBracket = function (args: MatchupActionCreateArgs): Bracket {
-	return BracketCreator.createPlayersBracket(args.players, args.options);
-}
-
 /** Used to mark a player or matchup with flags. */
 export interface UpdateBracketFlagsArgs {
 	locations: MatchupLocation[]
 	flags: Flags
 }
 
+
 export default {
-	create: CreateActionProcess<"BRACKET_CREATE", Bracket, MatchupActionCreateArgs>("BRACKET_CREATE", createBracket),
-	markWinner: CreateAction<"BRACKET_MARK_WINNER", MatchupActionMarkArgs>("BRACKET_MARK_WINNER"),
-	updateFlags: CreateAction<"BRACKET_UPDATE_FLAGS", UpdateBracketFlagsArgs>("BRACKET_UPDATE_FLAGS")
+	create: defineActionFactory<"BRACKET_CREATE", Bracket, MatchupActionCreateArgs>("BRACKET_CREATE", (args) => {
+		return BracketCreator.createPlayersBracket(args.players, args.options);
+	}),
+	markWinner: defineActionFactory<"BRACKET_MARK_WINNER", MatchupActionMarkArgs>("BRACKET_MARK_WINNER"),
+	updateFlags: defineActionFactory<"BRACKET_UPDATE_FLAGS", UpdateBracketFlagsArgs>("BRACKET_UPDATE_FLAGS")
 }

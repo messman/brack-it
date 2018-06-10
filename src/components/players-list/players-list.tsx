@@ -2,7 +2,7 @@ import * as React from "react";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
 
-import { State, Player, actions, wrapStore, wrapDispatcher, getReturnType } from "../../data";
+import { State, Player, actions } from "../../data";
 import { PlayersListItem } from "../";
 
 import "./players-list.scss";
@@ -16,11 +16,18 @@ interface PlayersListOwnState {
 	newPlayerText: string
 }
 
-function mapDispatchToProps(dispatch: ReactRedux.Dispatch<any>) {
-	return wrapDispatcher(Redux.bindActionCreators(actions.players, dispatch));
+function mapDispatchToProps(dispatch: ReactRedux.Dispatch) {
+	return {
+		players: Redux.bindActionCreators(actions.players, dispatch)
+	}
 }
-const dispatchType = getReturnType(mapDispatchToProps);
-type PlayersListProps = typeof dispatchType & PlayersListOwnProps;
+function mergeProps(stateProps: never, dispatchProps: ReturnType<typeof mapDispatchToProps>, ownProps: PlayersListOwnProps) {
+	return {
+		dispatch: dispatchProps,
+		...ownProps
+	}
+}
+type PlayersListProps = ReturnType<typeof mergeProps>;
 
 class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState> {
 
@@ -37,7 +44,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 	private addPlayer() {
 		const value = this.state.newPlayerText;
 		if (value) {
-			this.props.dispatcher.create(value);
+			this.props.dispatch.players.create(value);
 			// Reset the input
 			this.setState({
 				newPlayerText: ""
@@ -58,7 +65,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 					.filter((str) => { return !!str && str.length > 1 })
 					.forEach((str) => {
 						addedAny = true;
-						this.props.dispatcher.create(str);
+						this.props.dispatch.players.create(str);
 					});
 			}
 		}
@@ -77,7 +84,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 	}
 
 	private updateName(index: number, name: string): void {
-		this.props.dispatcher.updateName({ index, name });
+		this.props.dispatch.players.updateName({ index, name });
 	}
 
 	render() {
@@ -90,7 +97,7 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 				<ul>
 					{this.props.players.map((player, index) => {
 						const updateName: (name: string) => void = this.updateName.bind(this, index);
-						const deletePlayer: () => void = this.props.dispatcher.delete.bind(this, index);
+						const deletePlayer: () => void = this.props.dispatch.players.delete.bind(this, index);
 						return (
 							<PlayersListItem key={player.reactId} index={index} player={player} onUpdateName={updateName} onDelete={deletePlayer} />
 						)
@@ -101,4 +108,4 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 	}
 }
 
-export default ReactRedux.connect(null, mapDispatchToProps)(PlayersList);
+export default ReactRedux.connect(null, mapDispatchToProps, mergeProps)(PlayersList);
