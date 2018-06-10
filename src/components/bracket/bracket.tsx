@@ -13,24 +13,21 @@ import "./bracket.scss";
 // Get the combined type of our state and actions
 function mapStateToProps(state: State) {
 	return {
-		players: state.players,
-		bracket: state.bracket
+		state: {
+			players: state.players,
+			bracket: state.bracket
+		}
 	};
 }
 function mapDispatchToProps(dispatch: ReactRedux.Dispatch) {
 	return {
-		players: Redux.bindActionCreators(actions.players, dispatch),
-		bracket: Redux.bindActionCreators(actions.bracket, dispatch)
+		dispatch: {
+			players: Redux.bindActionCreators(actions.players, dispatch),
+			bracket: Redux.bindActionCreators(actions.bracket, dispatch)
+		}
 	};
 }
-function mergeProps(stateProps: ReturnType<typeof mapStateToProps>, dispatchProps: ReturnType<typeof mapDispatchToProps>, ownProps: {}) {
-	return {
-		state: stateProps,
-		dispatch: dispatchProps,
-		...ownProps
-	}
-}
-type BracketProps = ReturnType<typeof mergeProps>;
+type BracketProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 interface BracketState {
 	useZoomable: boolean;
@@ -215,4 +212,4 @@ class Bracket extends React.Component<BracketProps, BracketState> {
 	}
 }
 
-export default ReactRedux.connect(mapStateToProps, mapDispatchToProps, mergeProps)(Bracket);
+export default ReactRedux.connect(mapStateToProps, mapDispatchToProps)(Bracket);

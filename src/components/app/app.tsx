@@ -11,24 +11,21 @@ import "../../style/index.scss";
 // Get the combined type of our state and action types
 function mapStateToProps(state: State) {
 	return {
-		order: state.appOrder,
-		players: state.players
-	};
+		state: {
+			order: state.appOrder,
+			players: state.players
+		}
+	}
 }
 function mapDispatchToProps(dispatch: ReactRedux.Dispatch) {
 	return {
-		order: Redux.bindActionCreators(actions.appOrder, dispatch),
-		players: Redux.bindActionCreators(actions.players, dispatch)
+		dispatch: {
+			order: Redux.bindActionCreators(actions.appOrder, dispatch),
+			players: Redux.bindActionCreators(actions.players, dispatch)
+		}
 	};
 }
-function mergeProps(stateProps: ReturnType<typeof mapStateToProps>, dispatchProps: ReturnType<typeof mapDispatchToProps>, ownProps: {}) {
-	return {
-		state: stateProps,
-		dispatch: dispatchProps,
-		...ownProps
-	};
-}
-type AppProps = ReturnType<typeof mergeProps>;
+type AppProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 class App extends React.Component<AppProps> {
 	constructor(props: AppProps) {
@@ -80,4 +77,4 @@ class App extends React.Component<AppProps> {
 	}
 }
 
-export default ReactRedux.connect(mapStateToProps, mapDispatchToProps, mergeProps)(App);
+export default ReactRedux.connect(mapStateToProps, mapDispatchToProps)(App);

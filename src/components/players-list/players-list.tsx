@@ -18,16 +18,12 @@ interface PlayersListOwnState {
 
 function mapDispatchToProps(dispatch: ReactRedux.Dispatch) {
 	return {
-		players: Redux.bindActionCreators(actions.players, dispatch)
-	}
+		dispatch: {
+			players: Redux.bindActionCreators(actions.players, dispatch)
+		}
+	};
 }
-function mergeProps(stateProps: never, dispatchProps: ReturnType<typeof mapDispatchToProps>, ownProps: PlayersListOwnProps) {
-	return {
-		dispatch: dispatchProps,
-		...ownProps
-	}
-}
-type PlayersListProps = ReturnType<typeof mergeProps>;
+type PlayersListProps = PlayersListOwnProps & ReturnType<typeof mapDispatchToProps>;
 
 class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState> {
 
@@ -108,4 +104,4 @@ class PlayersList extends React.Component<PlayersListProps, PlayersListOwnState>
 	}
 }
 
-export default ReactRedux.connect(null, mapDispatchToProps, mergeProps)(PlayersList);
+export default ReactRedux.connect(null, mapDispatchToProps)(PlayersList);
